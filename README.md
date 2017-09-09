@@ -1,2 +1,4 @@
-# PiSpy
-Basically 1984... (a better description will be thought of soon)
+# Telescreen
+![big brother](./assets/big-brother.png)
+
+Have you read the book 1984?
