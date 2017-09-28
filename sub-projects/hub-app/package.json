@@ -4,6 +4,10 @@
   "main": "src/index.jsx",
   "repository": "https://github.com/CodeSpaceHQ/Telescreen.git",
   "license": "MIT",
+  "scripts": {
+    "prod": "webpack --env=prod",
+    "dev": "webpack-dev-server --env=dev"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
