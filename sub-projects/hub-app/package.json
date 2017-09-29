@@ -1,7 +1,7 @@
 {
-  "name": "hub-app",
+  "name": "hub",
   "version": "0.0.0",
-  "main": "src/index.jsx",
+  "main": "src/app/index.jsx",
   "repository": "https://github.com/CodeSpaceHQ/Telescreen.git",
   "license": "MIT",
   "scripts": {

@@ -1,7 +1,7 @@
 const path = require('path');
 
 const nodePath = path.resolve(__dirname, '../node_modules');
-const appPath = path.resolve(__dirname, '../src');
+const appPath = path.resolve(__dirname, '../src/app');
 
 const base = {
   // Allows for absolute paths from locations indicated in 'root'

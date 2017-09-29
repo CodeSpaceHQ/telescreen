@@ -4,7 +4,7 @@ const path = require('path');
 
 const base = require('./base.js');
 
-const buildPath = path.resolve(__dirname, '../../hub-server/public');
+const buildPath = path.resolve(__dirname, '../public');
 
 const prod = webpackMerge(base, {
   output: {
@@ -15,7 +15,7 @@ const prod = webpackMerge(base, {
 
   entry: {
     app: [
-      './src/index.jsx',
+      './src/app/index.jsx',
     ],
   },
 
