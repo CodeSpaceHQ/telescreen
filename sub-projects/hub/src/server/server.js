@@ -4,7 +4,7 @@ require('app-module-path').addPath(__dirname);
 // load environment variables from .env file.
 require('dotenv').load({ path: path.resolve(__dirname, '../../.env') });
 
-const logger = require('./utils/logger.js');
+const logger = require('../app/utils/logger.js');
 const connection = require('./connection.js');
 const app = require('./app.js');
 
