@@ -3,16 +3,18 @@ const logger = require('loglevel');
 let envLevel = 'trace';
 
 /* eslint-disable no-undef */
-// Checks current build environment
-switch (ENV) {
-  case 'prod':
-    envLevel = 'error';
-    break;
-  case 'dev':
-    envLevel = 'trace';
-    break;
-  default:
-    envLevel = 'trace';
+if (typeof ENV !== 'undefined') {
+  // Checks current build environment
+  switch (ENV) {
+    case 'prod':
+      envLevel = 'error';
+      break;
+    case 'dev':
+      envLevel = 'trace';
+      break;
+    default:
+      envLevel = 'trace';
+  }
 }
 /* eslint-enable no-undef */
 

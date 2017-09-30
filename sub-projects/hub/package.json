@@ -5,8 +5,12 @@
   "repository": "https://github.com/CodeSpaceHQ/Telescreen.git",
   "license": "MIT",
   "scripts": {
-    "prod": "webpack --env=prod",
-    "dev": "webpack-dev-server --env=dev"
+    "prod": "npm-run-all prod-app prod-server",
+    "prod-app": "webpack --env=prod",
+    "prod-server": "cross-env NODE_ENV=prod node src/server/server.js",
+    "dev": "npm-run-all --parallel dev-server dev-app",
+    "dev-app": "webpack-dev-server --env=dev",
+    "dev-server": "cross-env NODE_ENV=dev node src/server/server.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -19,6 +23,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "5.1.1",
     "eslint-plugin-react": "7.1.0",
+    "mockgoose": "^7.3.3",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
@@ -37,8 +42,9 @@
     "express": "^4.16.0",
     "express-session": "^1.15.6",
     "loglevel": "^1.5.0",
-    "mongoose": "^4.11.13",
+    "mongoose": "4.10.8",
     "morgan": "^1.9.0",
+    "npm-run-all": "^4.1.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "prop-types": "^15.6.0",
