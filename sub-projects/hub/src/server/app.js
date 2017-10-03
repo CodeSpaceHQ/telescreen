@@ -9,7 +9,6 @@ const cors = require('cors');
 const strings = require('./resources/strings.js');
 const passport = require('./passport-config.js');
 const apiRouter = require('./router.js');
-const logger = require('../app/utils/logger.js');
 
 // Declarations/Definitions
 const port = process.env.PORT || 3000;
@@ -19,8 +18,8 @@ const corsOptions = {};
 
 // NODE_ENV dependent variations
 switch (process.env.NODE_ENV) {
-  case 'testing':
-    logger.disableAll();
+  case 'production':
+    corsOptions.origin = 'http://127.0.0.1:3000';
     break;
   case 'development':
     corsOptions.origin = 'http://127.0.0.1:8080';
