@@ -19,10 +19,10 @@ const corsOptions = {};
 
 // NODE_ENV dependent variations
 switch (process.env.NODE_ENV) {
-  case 'test':
+  case 'testing':
     logger.disableAll();
     break;
-  case 'dev':
+  case 'development':
     corsOptions.origin = 'http://127.0.0.1:8080';
     corsOptions.credentials = true;
     break;
@@ -34,7 +34,7 @@ switch (process.env.NODE_ENV) {
 app.use(cors(corsOptions));
 app.set('port', port);
 app.use(morgan(format, {
-  skip() { return process.env.NODE_ENV === 'test'; },
+  skip() { return process.env.NODE_ENV === 'testing'; },
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,7 +43,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 14,
-    secure: process.env.NODE_ENV === 'prod',
+    secure: process.env.NODE_ENV === 'production',
   },
   name: strings.cookieName,
   resave: false,

@@ -11,7 +11,7 @@ mongoose.Promise = global.Promise;
  */
 function open() {
   return new Promise((resolve, reject) => {
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === 'testing') {
       mockgoose(mongoose);
     }
 
@@ -32,7 +32,7 @@ function open() {
  * @returns {Promise<undefined, Error>} - Resolves when connection is closed.
  */
 function close() {
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === 'testing') {
     return new Promise((resolve) => {
       mongoose.unmock(() => {
         resolve();

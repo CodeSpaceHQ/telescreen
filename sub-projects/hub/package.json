@@ -7,10 +7,10 @@
   "scripts": {
     "prod": "npm-run-all prod-app prod-server",
     "prod-app": "webpack --env=prod",
-    "prod-server": "cross-env NODE_ENV=prod node src/server/server.js",
+    "prod-server": "cross-env NODE_ENV=production node src/server/server.js",
     "dev": "npm-run-all --parallel dev-server dev-app",
     "dev-app": "webpack-dev-server --env=dev",
-    "dev-server": "cross-env NODE_ENV=dev node src/server/server.js"
+    "dev-server": "cross-env NODE_ENV=development node src/server/server.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
