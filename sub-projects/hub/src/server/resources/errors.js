@@ -10,7 +10,10 @@ function errorFactory(newMessage, newStatus) {
 }
 
 const InvalidLoginInfoError = errorFactory('Invalid username/password.', 401);
+const InvalidSessionError = errorFactory('Invalid session token.', 401);
 
 module.exports = {
+  errorFactory,
   InvalidLoginInfoError,
+  InvalidSessionError,
 };

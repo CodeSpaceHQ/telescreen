@@ -2,7 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const authErrors = require('./resources/errors.js');
-const User = require('./users/user-models.js').User;
+const Admin = require('./users/user-models.js').Admin;
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
@@ -11,7 +11,7 @@ passport.use(new LocalStrategy({
 (email, password, done) => {
   let userStorage;
 
-  User.findOne({ email }).exec()
+  Admin.findOne({ email }).exec()
     .catch((err) => {
       done(err);
     })
@@ -41,7 +41,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((email, done) => {
-  User.findOne({ email }).exec()
+  Admin.findOne({ email }).exec()
     .catch((err) => {
       done(err, null);
     })
