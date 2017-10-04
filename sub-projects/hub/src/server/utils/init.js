@@ -8,18 +8,22 @@ async function initialize() {
       return;
     }
 
-    // TODO(NilsG-S): Read from input
-    const email = 'test@ttu.edu';
-    const password = 'testing';
-
     const info = {
-      email,
-      password,
+      email: process.env.INIT_USERNAME,
+      password: process.env.INIT_PASSWORD,
     };
 
     const user = new Admin(info);
 
-    await user.save();
+    await new Promise((resolve, reject) => {
+      user.save((err, response) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(response);
+      });
+    });
   } catch (err) {
     throw err;
   }

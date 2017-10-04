@@ -24,6 +24,9 @@ MONGODB_URI=mongodb://localhost:27017/test
 
 SECRET=thisisoursecret
 SALT=10
+
+INIT_USERNAME=test@ttu.edu
+INIT_PASSWORD=test
 ```
 
 ### Test Changes
