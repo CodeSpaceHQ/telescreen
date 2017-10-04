@@ -10,7 +10,8 @@
     "prod-server": "cross-env NODE_ENV=production node src/server/server.js",
     "dev": "npm-run-all --parallel dev-server dev-app",
     "dev-app": "webpack-dev-server --env=dev",
-    "dev-server": "cross-env NODE_ENV=development node src/server/server.js"
+    "dev-server": "cross-env NODE_ENV=development node src/server/server.js",
+    "test-server": "cross-env NODE_ENV=test jest --config jest.server.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -23,6 +24,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "5.1.1",
     "eslint-plugin-react": "7.1.0",
+    "jest": "^21.2.1",
     "mockgoose": "^7.3.3",
     "node-sass": "^4.5.3",
     "sass-loader": "^6.0.6",
