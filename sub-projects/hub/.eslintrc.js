@@ -1,9 +1,5 @@
 module.exports = {
   "extends": "airbnb",
-  "env": {
-    "browser": true,
-    "node": true
-  },
   "rules": {
     "no-unused-expressions": 0,
     "import/no-extraneous-dependencies": 0,
