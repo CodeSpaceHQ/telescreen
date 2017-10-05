@@ -11,6 +11,7 @@
     "dev": "npm-run-all --parallel dev-server dev-app",
     "dev-app": "webpack-dev-server --env=dev",
     "dev-server": "cross-env NODE_ENV=development node src/server/server.js",
+    "test": "npm-run-all --parallel --continue-on-error test-server",
     "test-server": "cross-env NODE_ENV=testing jest --config jest.server.js"
   },
   "devDependencies": {
