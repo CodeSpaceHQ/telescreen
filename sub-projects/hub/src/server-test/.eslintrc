@@ -5,6 +5,7 @@
   "globals": {
     "mockgoose": true,
     "mongoose": true,
-    "app": true
+    "app": true,
+    "jasmine": true
   }
 }
