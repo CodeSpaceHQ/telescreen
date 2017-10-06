@@ -20,7 +20,8 @@
 
 ```
 PORT=3000
-MONGODB_URI=mongodb://localhost:27017/test
+PROD_MONGODB_URI=mongodb://localhost:27017/test
+DEV_MONGODB_URI=mongodb://localhost:27017/test
 
 SECRET=thisisoursecret
 SALT=10

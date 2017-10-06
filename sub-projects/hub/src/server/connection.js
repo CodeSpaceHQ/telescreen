@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
 const mockgoose = require('mockgoose');
 
-const mongoURL = process.env.MONGODB_URI;
 mongoose.Promise = global.Promise;
+let mongoURL;
+if (process.env.NODE_ENV === 'production') {
+  mongoURL = process.env.PROD_MONGODB_URI;
+} else {
+  mongoURL = process.env.DEV_MONGODB_URI;
+}
 
 /**
  * Opens a connection from mongoose to the database, wrapping it with
