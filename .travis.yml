@@ -1,0 +1,20 @@
+notifications:
+  email: false
+language: node_js
+node_js:
+  - "8"
+cache: yarn
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
+env:
+  - CXX=g++-4.8
+script:
+  - cd sub-projects/hub
+  - node src/server/utils/setup.js
+  - yarn install
+  - yarn run test

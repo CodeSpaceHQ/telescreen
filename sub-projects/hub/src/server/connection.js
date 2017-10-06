@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
 const mockgoose = require('mockgoose');
 
-const mongoURL = process.env.MONGODB_URI;
 mongoose.Promise = global.Promise;
+let mongoURL;
+if (process.env.NODE_ENV === 'production') {
+  mongoURL = process.env.PROD_MONGODB_URI;
+} else {
+  mongoURL = process.env.DEV_MONGODB_URI;
+}
 
 /**
  * Opens a connection from mongoose to the database, wrapping it with
@@ -11,7 +16,7 @@ mongoose.Promise = global.Promise;
  */
 function open() {
   return new Promise((resolve, reject) => {
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === 'testing') {
       mockgoose(mongoose);
     }
 
@@ -32,7 +37,7 @@ function open() {
  * @returns {Promise<undefined, Error>} - Resolves when connection is closed.
  */
 function close() {
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === 'testing') {
     return new Promise((resolve) => {
       mongoose.unmock(() => {
         resolve();
