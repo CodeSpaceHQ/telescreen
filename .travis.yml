@@ -12,13 +12,7 @@ addons:
     - gcc-4.8
     - g++-4.8
 env:
-  - TRAVIS=travis CXX=g++-4.8
-  - PORT=$PORT
-  - MONGODB_URI=$MONGODB_URI
-  - SECRET=$SECRET
-  - SALT=$SALT
-  - INIT_USERNAME=$INIT_USERNAME
-  - INIT_PASSWORD=$INIT_PASSWORD
+  - CXX=g++-4.8
 script:
   - cd sub-projects/hub
   - yarn install
