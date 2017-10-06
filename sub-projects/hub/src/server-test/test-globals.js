@@ -1,9 +1,7 @@
 const path = require('path');
 
-console.log(process.env);
-
 // load environment variables from .env file.
-// require('dotenv').load({ path: path.resolve(__dirname, '../../.env') });
+require('dotenv').load({ path: path.resolve(__dirname, '../../.env') });
 // Make sure integration tests have time to run
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 

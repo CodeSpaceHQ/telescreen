@@ -15,5 +15,6 @@ env:
   - CXX=g++-4.8
 script:
   - cd sub-projects/hub
+  - node src/server/utils/setup.js
   - yarn install
   - yarn run test
