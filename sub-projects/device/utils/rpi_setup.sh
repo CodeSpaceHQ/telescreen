@@ -112,12 +112,12 @@ cd ..
 sudo python3 setup.py install --yes USE_AVX_INSTRUCTIONS --no DLIB_USE_CUDA
 
 
-########################################
+####################################################
 #
 # Begin installation of `face_recognition`
 # https://github.com/ageitgey/face_recognition.git
 #
-########################################
+####################################################
 cd ~
 sudo apt-get install python3-scipy -y
 pip3 install face_recognition
