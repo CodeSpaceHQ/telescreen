@@ -122,24 +122,25 @@ class WebCamVideoStream(object):
 
 class ScreenStream(object):
     
-    def __init__(self, src=0, usePiCamera=False, FPS=32, resolution=(400,400)):
+    def __init__(self, src=0, use_pi_cam=False, framerate=32,
+                 resolution=(400, 400)):
         """
         Initialize a video stream from a PiCamera or a USB Webcam (default)
         based on imutils library for python: https://github.com/jrosebr1/imutils
 
         Args:
           src: the source for the webcam (default camera is 0)
-          usePiCamera: boolean of whether to use PiCamera
-          FPS: framerate of the PiCamera
+          use_pi_cam: boolean of whether to use PiCamera
+          framerate: frames per second of the PiCamera
           resolution: resolution of the PiCamera
         """
-        self.usePiCamera= usePiCamera  # dfault to use USB webcam
-        self.FPS = FPS  # frames per second
+        self.use_pi_cam = use_pi_cam  # default to use USB webcam
+        self.framerate = framerate  # frames per second
         self.resolution = resolution
         
-        if usePiCamera:  # set up picamera using helper class
+        if use_pi_cam:  # set up picamera using helper class
             self.stream = PiCameraVideoStream(resolution=resolution,
-                                              framerate=FPS)
+                                              framerate=framerate)
         else:  # set up webcam using helper class
             self.stream = WebCamVideoStream(src=src)
             
