@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-render(
-  <h1>Testing</h1>,
-  document.getElementById('app'),
-);
+import AppConfig from './config.jsx';
+
+const element = document.getElementById('app');
+render(<AppConfig />, element);
