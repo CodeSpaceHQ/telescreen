@@ -3,8 +3,8 @@ from screenstream import ScreenStream
 import cv2
 from time import sleep
 
-video_stream = ScreenStream().start()
-sleep(2) # wait for the camera to wake up
+video_stream = ScreenStream()
+video_stream.start()
 
 while True:
     frame = video_stream.read() # read a frame from the stream

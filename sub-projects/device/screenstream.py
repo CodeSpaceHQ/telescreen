@@ -1,7 +1,8 @@
 from cv2 import VideoCapture
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from threading import Thread, Event, Condition
+from threading import Thread, Event
+from time import sleep
 
 
 class PiCameraVideoStream(object):
@@ -87,6 +88,7 @@ class WebCamVideoStream(object):
         Args:
           src: the source for the USB webcam, 0 is the default camera
         """
+        self.src = src
         self.stream = VideoCapture(src)  # initialize video source
         self.grabbed, self.frame = self.stream.read()  # grab initial frame
         self.stopped = False
@@ -96,24 +98,23 @@ class WebCamVideoStream(object):
         """
         Start the video stream on a separate daemon thread.
         """
-        thread = Thread(target=self.update, args=(self.has_frame,))
+        thread = Thread(target=self.update, args=(self.frame, self.has_frame))
         thread.daemon = True  # set thread to daemon
-        if self.stream.isOpen():  # check if VideoCapture is opened (its slow)
-            thread.start()  # start thread
-            return self
-        else:  # not opened
-            self.stream.open()
-            self.start()
+        thread.start()  # start thread
 
-    def update(self, event):
+    def update(self, frame, has_frame):
         """
         Continuously update the stream with the most recent frame
         until stopped.
         """
-
+        print('attempting to grab frame')
         while not self.stopped:
-            self.grabbed, self.frame = self.stream.read()
-            event.set()
+            self.grabbed, frame = self.stream.read()
+            if self.grabbed:
+                has_frame.set()  # notify
+            else:
+                sleep(0)  # yield thread to scheduler
+
 
     def read(self):
         """
@@ -121,6 +122,7 @@ class WebCamVideoStream(object):
         Returns:
           The most recent frame captured
         """
+        print('attemping to read frame')
         self.has_frame.wait()
         frame = self.frame
         self.has_frame.clear()
