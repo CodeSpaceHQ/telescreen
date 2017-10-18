@@ -1,7 +1,7 @@
 from cv2 import VideoCapture
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from threading import Thread
+from threading import Thread, Event
 
 
 class PiCameraVideoStream(object):
@@ -30,17 +30,18 @@ class PiCameraVideoStream(object):
 
         self.frame = None  # current frame
         self.stopped = False
+        self.has_frame_event = Event()
 
     def start(self):
         """
         Start the video stream on a separate daemon thread.
         """
-        thread = Thread(target=self.update, args=())
-        thread.daemon = True
-        thread.start()
+        thread = Thread(target=self.update, args=self.has_frame_event)  # create new thread
+        thread.daemon = True  # set thread to daemon
+        thread.start()  # start thread
         return self
 
-    def update(self):
+    def update(self, event):
         """
         Continuously update the stream with each frame
         until stopped.
@@ -48,11 +49,13 @@ class PiCameraVideoStream(object):
         for frame in self.stream:
             self.frame = frame.array
             self.rawCapture.truncate(0)
+            event.set()
 
             if self.stopped:
                 self.stream.close()
                 self.rawCapture.close()
                 self.camera.close()
+                event.clear()
                 return
 
     def read(self):
@@ -61,7 +64,10 @@ class PiCameraVideoStream(object):
         Returns:
           The most recent frame captured
         """
-        return self.frame
+        self.has_frame_event.wait()  # if a frame exists do nothing, otherwise block
+        frame = self.frame
+        self.has_frame_event.clear()
+        return frame
 
     def stop(self):
         """
@@ -87,23 +93,26 @@ class WebCamVideoStream(object):
         self.stream = VideoCapture(src)  # initialize video source
         self.grabbed, self.frame = self.stream.read()  # grab initial frame
         self.stopped = False
+        self.has_frame_event = Event()
 
     def start(self):
         """
         Start the video stream on a separate daemon thread.
         """
-        thread = Thread(target=self.update, args=())  # create new thread
+        thread = Thread(target=self.update, args=self.has_frame_event)  # create new thread
         thread.daemon = True  # set thread to daemon
         thread.start()  # start thread
         return self
 
-    def update(self):
+    def update(self, event):
         """
         Continuously update the stream with the most recent frame
         until stopped.
         """
+
         while not self.stopped:
             self.grabbed, self.frame = self.stream.read()
+            event.set()
 
     def read(self):
         """
@@ -111,7 +120,10 @@ class WebCamVideoStream(object):
         Returns:
           The most recent frame captured
         """
-        return self.frame
+        self.has_frame_event.wait()  # if a frame exists do nothing, otherwise block
+        frame = self.frame
+        self.has_frame_event.clear()
+        return frame
 
     def stop(self):
         """
@@ -121,8 +133,7 @@ class WebCamVideoStream(object):
 
 
 class ScreenStream(object):
-    
-    def __init__(self, src=0, usePiCamera=False, FPS=32, resolution=(400,400)):
+    def __init__(self, src=0, usePiCamera=False, FPS=32, resolution=(400, 400)):
         """
         Initialize a video stream from a PiCamera or a USB Webcam (default)
         based on imutils library for python: https://github.com/jrosebr1/imutils
@@ -133,34 +144,28 @@ class ScreenStream(object):
           FPS: framerate of the PiCamera
           resolution: resolution of the PiCamera
         """
-        self.usePiCamera= usePiCamera  # dfault to use USB webcam
+        self.usePiCamera = usePiCamera  # dfault to use USB webcam
         self.FPS = FPS  # frames per second
         self.resolution = resolution
-        
+
         if usePiCamera:  # set up picamera using helper class
             self.stream = PiCameraVideoStream(resolution=resolution,
                                               framerate=FPS)
         else:  # set up webcam using helper class
             self.stream = WebCamVideoStream(src=src)
-            
+
     def start(self):
         """
         Start the corresponding stream
         """
         return self.stream.start()
-    
-    def update(self):
-        """
-        Update the frame for the corresponding stream
-        """
-        return self.stream.update()
-    
+
     def read(self):
         """
         Read a frame in the corresponding stream
         """
         return self.stream.read()
-    
+
     def stop(self):
         """
         Stop the corresponding stream
