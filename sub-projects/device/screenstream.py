@@ -30,13 +30,12 @@ class PiCameraVideoStream(object):
 
         self.frame = None  # current frame
         self.stopped = False
-        self.has_frame_event = Event()
 
     def start(self):
         """
         Start the video stream on a separate daemon thread.
         """
-        thread = Thread(target=self.update, args=(self.has_frame_event,))  # create new thread
+        thread = Thread(target=self.update, args=())  # create new thread
         thread.daemon = True  # set thread to daemon
         thread.start()  # start thread
         return self
@@ -64,9 +63,7 @@ class PiCameraVideoStream(object):
         Returns:
           The most recent frame captured
         """
-        self.has_frame_event.wait()  # if a frame exists do nothing, otherwise block
         frame = self.frame
-        self.has_frame_event.clear()
         return frame
 
     def stop(self):
@@ -93,16 +90,20 @@ class WebCamVideoStream(object):
         self.stream = VideoCapture(src)  # initialize video source
         self.grabbed, self.frame = self.stream.read()  # grab initial frame
         self.stopped = False
-        self.has_frame_event = Event()
+        self.has_frame = Event()
 
     def start(self):
         """
         Start the video stream on a separate daemon thread.
         """
-        thread = Thread(target=self.update, args=(self.has_frame_event,))  # create new thread
+        thread = Thread(target=self.update, args=(self.has_frame,))
         thread.daemon = True  # set thread to daemon
-        thread.start()  # start thread
-        return self
+        if self.stream.isOpen():  # check if VideoCapture is opened (its slow)
+            thread.start()  # start thread
+            return self
+        else:  # not opened
+            self.stream.open()
+            self.start()
 
     def update(self, event):
         """
@@ -120,9 +121,9 @@ class WebCamVideoStream(object):
         Returns:
           The most recent frame captured
         """
-        self.has_frame_event.wait()  # if a frame exists do nothing, otherwise block
+        self.has_frame.wait()
         frame = self.frame
-        self.has_frame_event.clear()
+        self.has_frame.clear()
         return frame
 
     def stop(self):
