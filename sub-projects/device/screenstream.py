@@ -1,7 +1,7 @@
 from cv2 import VideoCapture
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from threading import Thread, Event
+from threading import Thread, Event, Condition
 
 
 class PiCameraVideoStream(object):
@@ -36,7 +36,7 @@ class PiCameraVideoStream(object):
         """
         Start the video stream on a separate daemon thread.
         """
-        thread = Thread(target=self.update, args=self.has_frame_event)  # create new thread
+        thread = Thread(target=self.update, args=(self.has_frame_event,))  # create new thread
         thread.daemon = True  # set thread to daemon
         thread.start()  # start thread
         return self
@@ -99,7 +99,7 @@ class WebCamVideoStream(object):
         """
         Start the video stream on a separate daemon thread.
         """
-        thread = Thread(target=self.update, args=self.has_frame_event)  # create new thread
+        thread = Thread(target=self.update, args=(self.has_frame_event,))  # create new thread
         thread.daemon = True  # set thread to daemon
         thread.start()  # start thread
         return self
