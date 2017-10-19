@@ -8,7 +8,7 @@ from time import sleep
 class PiCameraVideoStream(object):
     """
     A class that handles threaded video streaming through a PiCamera.
-    based on imutils library for python: https://github.com/jrosebr1/imutils
+    slightly based on imutils library for python: https://github.com/jrosebr1/imutils
     """
 
     def __init__(self, resolution, framerate):
@@ -75,7 +75,6 @@ class PiCameraVideoStream(object):
         self.stopped = True
 
 
-
 class WebCamVideoStream(object):
     """
     A class that handles threaded video streaming through a USB webcam.
@@ -102,7 +101,7 @@ class WebCamVideoStream(object):
         capturing device is opened.
         """
         while not self.stream.isOpened():  # wait for I/O to come online
-            sleep(8)  # 8 seconds = 1 successfull re-open attempt???
+            sleep(8)  # 8 seconds = 1 successful re-open attempt
             self.stream.open(self.src)  # attempt to open again
             
         thread = Thread(target=self.update, args=())
@@ -118,7 +117,6 @@ class WebCamVideoStream(object):
             self.grabbed, self.frame = self.stream.read()
             if self.grabbed:
                 self.has_frame.set()  # notify
-
 
     def read(self):
         """
@@ -137,7 +135,6 @@ class WebCamVideoStream(object):
         """
         self.stopped = True
         self.stream.release()  # close capturing device
-
 
 
 class ScreenStream(object):
