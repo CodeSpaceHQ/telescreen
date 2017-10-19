@@ -1,8 +1,13 @@
+"""
+A module to handle threaded video streaming via a WebCam or a PiCamera
+on a Raspberry Pi device.
+"""
+
+from threading import Thread, Event
+from time import sleep
 from cv2 import VideoCapture
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from threading import Thread, Event
-from time import sleep
 
 
 class PiCameraVideoStream(object):
@@ -23,7 +28,7 @@ class PiCameraVideoStream(object):
         self.camera.resolution = resolution
         self.camera.framerate = framerate
         self.raw_capture = PiRGBArray(self.camera,
-                                     size=resolution)  # get RGB array from the camera
+                                      size=resolution)  # get RGB array from the camera
         # continuously capture and store as an array in stream
         self.stream = self.camera.capture_continuous(self.raw_capture,
                                                      format="bgr",
@@ -103,7 +108,6 @@ class WebCamVideoStream(object):
         while not self.stream.isOpened():  # wait for I/O to come online
             sleep(8)  # 8 seconds = 1 successful re-open attempt
             self.stream.open(self.src)  # attempt to open again
-            
         thread = Thread(target=self.update, args=())
         thread.daemon = True  # set thread to daemon
         thread.start()  # start thread
@@ -138,7 +142,12 @@ class WebCamVideoStream(object):
 
 
 class ScreenStream(object):
-    def __init__(self, src=0, use_pi_camera=False, framerate=32, resolution=(400, 400)):
+    """
+    Initiate threaded video streaming through a camera device.
+    """
+
+    def __init__(self, src=0, use_pi_camera=False, framerate=32,
+                 resolution=(400, 400)):
         """
         Initialize a video stream from a PiCamera or a USB Webcam (default)
         based on imutils library for python: https://github.com/jrosebr1/imutils
