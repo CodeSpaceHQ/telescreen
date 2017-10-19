@@ -22,15 +22,16 @@ class PiCameraVideoStream(object):
         self.camera = PiCamera()  # get picamera object
         self.camera.resolution = resolution
         self.camera.framerate = framerate
-        self.rawCapture = PiRGBArray(self.camera,
+        self.raw_capture = PiRGBArray(self.camera,
                                      size=resolution)  # get RGB array from the camera
         # continuously capture and store as an array in stream
-        self.stream = self.camera.capture_continuous(self.rawCapture,
+        self.stream = self.camera.capture_continuous(self.raw_capture,
                                                      format="bgr",
                                                      use_video_port=True)
 
         self.frame = None  # current frame
         self.stopped = False
+        self.has_frame = Event()
 
     def start(self):
         """
@@ -39,23 +40,21 @@ class PiCameraVideoStream(object):
         thread = Thread(target=self.update, args=())  # create new thread
         thread.daemon = True  # set thread to daemon
         thread.start()  # start thread
-        return self
 
-    def update(self, event):
+    def update(self):
         """
         Continuously update the stream with each frame
         until stopped.
         """
         for frame in self.stream:
             self.frame = frame.array
-            self.rawCapture.truncate(0)
-            event.set()
-
+            self.raw_capture.truncate(0)
+            if frame:
+                self.has_frame.set()  # set flag
             if self.stopped:
                 self.stream.close()
-                self.rawCapture.close()
+                self.raw_capture.close()
                 self.camera.close()
-                event.clear()
                 return
 
     def read(self):
@@ -64,7 +63,9 @@ class PiCameraVideoStream(object):
         Returns:
           The most recent frame captured
         """
+        self.has_frame.wait()  # wait for frame from thread
         frame = self.frame
+        self.has_frame.clear()  # clear flag
         return frame
 
     def stop(self):
@@ -72,6 +73,7 @@ class PiCameraVideoStream(object):
         Stop the video stream.
         """
         self.stopped = True
+
 
 
 class WebCamVideoStream(object):
@@ -96,24 +98,26 @@ class WebCamVideoStream(object):
 
     def start(self):
         """
-        Start the video stream on a separate daemon thread.
+        Start the video stream on a separate daemon thread once the
+        capturing device is opened.
         """
-        thread = Thread(target=self.update, args=(self.frame, self.has_frame))
+        while not self.stream.isOpened():  # wait for I/O to come online
+            sleep(8)  # 8 seconds = 1 successfull re-open attempt???
+            self.stream.open(self.src)  # attempt to open again
+            
+        thread = Thread(target=self.update, args=())
         thread.daemon = True  # set thread to daemon
         thread.start()  # start thread
 
-    def update(self, frame, has_frame):
+    def update(self):
         """
         Continuously update the stream with the most recent frame
         until stopped.
         """
-        print('attempting to grab frame')
         while not self.stopped:
-            self.grabbed, frame = self.stream.read()
+            self.grabbed, self.frame = self.stream.read()
             if self.grabbed:
-                has_frame.set()  # notify
-            else:
-                sleep(0)  # yield thread to scheduler
+                self.has_frame.set()  # notify
 
 
     def read(self):
@@ -122,7 +126,6 @@ class WebCamVideoStream(object):
         Returns:
           The most recent frame captured
         """
-        print('attemping to read frame')
         self.has_frame.wait()
         frame = self.frame
         self.has_frame.clear()
@@ -133,10 +136,12 @@ class WebCamVideoStream(object):
         Stop the video stream.
         """
         self.stopped = True
+        self.stream.release()  # close capturing device
+
 
 
 class ScreenStream(object):
-    def __init__(self, src=0, usePiCamera=False, FPS=32, resolution=(400, 400)):
+    def __init__(self, src=0, use_pi_camera=False, framerate=32, resolution=(400, 400)):
         """
         Initialize a video stream from a PiCamera or a USB Webcam (default)
         based on imutils library for python: https://github.com/jrosebr1/imutils
@@ -147,13 +152,13 @@ class ScreenStream(object):
           FPS: framerate of the PiCamera
           resolution: resolution of the PiCamera
         """
-        self.usePiCamera = usePiCamera  # dfault to use USB webcam
-        self.FPS = FPS  # frames per second
+        self.use_pi_camera = use_pi_camera  # dfault to use USB webcam
+        self.framerate = framerate  # frames per second
         self.resolution = resolution
 
-        if usePiCamera:  # set up picamera using helper class
+        if use_pi_camera:  # set up picamera using helper class
             self.stream = PiCameraVideoStream(resolution=resolution,
-                                              framerate=FPS)
+                                              framerate=framerate)
         else:  # set up webcam using helper class
             self.stream = WebCamVideoStream(src=src)
 
