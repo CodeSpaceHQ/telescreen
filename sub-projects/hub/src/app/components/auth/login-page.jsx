@@ -1,29 +1,33 @@
 import React from 'react';
 import { Button, Form, Input, Header, TextArea, Image, Icon, Container, Grid, Segment, GridColumn } from 'semantic-ui-react';
-
+import { Redirect } from 'react-router-dom';
 import binaryEye from './Binary-Eye-2.png';
 
 export default class LoginPage extends React.Component {
 
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             name: '',
             email: '',
             submittedName: '',
-            submittedEmail: ''
+            submittedEmail: '',
+            redirectToHome: false,
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    handleChange(e, stuff) {
-        this.setState({ [name]: value })
+    handleChange(env, stuff) {
+        this.setState({ [env.name]: env.value })
+        console.log('Changing stuff');
+        console.log('variable ' + env.name + ' ' + env.value);
         //Working on this still!!!!!!!!!!!!!
     }
 
     handleSubmit() {
         console.log("Clicked Login");
+        this.setState({ redirectToHome: true })
         // const { name, email } = this.state
         // this.setState({ submittedName: name, submittedEmail: email })
         // console.log("submitted name is: "+ submittedName);
@@ -42,6 +46,12 @@ export default class LoginPage extends React.Component {
         //Working on this still!!!!!!!!!!!
     }
     render() {
+        if (this.state.redirectToHome) {
+            return (
+              <Redirect to={{ pathname: '/' }}/>
+            )
+        }
+        
         return (
             <div className='login-form'>
                 <style>{`
@@ -91,7 +101,7 @@ export default class LoginPage extends React.Component {
                                     </Form.Field>
 
                                     <Button
-                                        content='submit'
+                                        type='submit'
                                         fluid
                                         primary
                                         size='large'
