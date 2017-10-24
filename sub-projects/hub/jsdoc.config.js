@@ -1,7 +1,8 @@
 module.exports = {
   source: {
+    include: ['src/server'],
+    exclude: ['node_modules', 'docs'],
     includePattern: '.+\\.js(x)?$',
-    excludePattern: '(node_modules/|docs)',
   },
   sourceType: 'module',
   opts: {

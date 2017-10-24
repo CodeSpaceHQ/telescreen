@@ -13,7 +13,7 @@
     "dev-server": "cross-env NODE_ENV=development node src/server/server.js",
     "test": "npm-run-all --parallel --continue-on-error test-server",
     "test-server": "cross-env NODE_ENV=testing jest --config jest.server.js",
-    "docs": "node node_modules/jsdoc/jsdoc.js -c jsdoc.config.js src/server"
+    "docs": "node node_modules/jsdoc/jsdoc.js -c jsdoc.config.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
