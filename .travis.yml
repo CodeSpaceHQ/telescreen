@@ -18,3 +18,11 @@ script:
   - node src/server/utils/setup.js
   - yarn install
   - yarn run test
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  local_dir: docs/
+  target_branch: gh-pages
+  on:
+    branch: master
