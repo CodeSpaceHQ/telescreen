@@ -1,17 +1,27 @@
 module.exports = {
-  plugins: [],
-  recurseDepth: 10,
   source: {
     includePattern: '.+\\.js(x)?$',
-    excludePattern: '(^|\\/|\\\\)_',
+    excludePattern: '(node_modules/|docs)',
   },
   sourceType: 'module',
+  opts: {
+    template: 'node_modules/minami',
+    encoding: 'utf8',
+    destination: 'docs/',
+    recurse: true,
+  },
+  recurseDepth: 10,
   tags: {
     allowUnknownTags: true,
-    dictionaries: ['jsdoc', 'closure'],
+    dictionaries: ['jsdoc'],
   },
   templates: {
     cleverLinks: false,
-    monospaceLinks: false,
+    monospaceLinks: true,
+    useLongnameInNav: false,
+    showInheritedInNav: true,
   },
+  plugins: [
+    'plugins/markdown',
+  ],
 };
