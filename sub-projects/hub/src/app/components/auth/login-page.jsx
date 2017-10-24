@@ -6,8 +6,8 @@ import binaryEye from './Binary-Eye-2.png';
 export default class LoginPage extends React.Component {
 
 
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             name: '',
             email: '',
@@ -68,33 +68,35 @@ export default class LoginPage extends React.Component {
                             Welcome to Telescreen!
                         </Header>
                             <Segment>
-                                <Form className="ui large form" onSubmit={this.handleSubmit}>
-                                    <div>
-                                        <Form.Field className="ui left icon input">
-                                            <Icon name='user' />
-                                            <Input
-                                                name='email'
-                                                type='text'
-                                                placeholder='Email Address'
-                                                onChange={this.handleChange}
-                                            />
-                                        </Form.Field>
-                                        <Form.Field className="ui left icon input">
-                                            <Icon name='lock' />
-                                            <Input
-                                                name='password'
-                                                type='text'
-                                                placeholder='Password'
-                                                onChange={this.handleChange}
-                                            />
-                                        </Form.Field>
+                                <Form className="ui large form">
+                                    <Form.Field className="ui left icon input">
+                                        <Icon name='user' />
+                                        <Input
+                                            required
+                                            name='email'
+                                            type='email'
+                                            placeholder='E-mail Address'
+                                            onChange={this.handleChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field className="ui left icon input">
+                                        <Icon name='lock' />
+                                        <Input
+                                            required
+                                            name='password'
+                                            type='password'
+                                            placeholder='Password'
+                                            onChange={this.handleChange}
+                                        />
+                                    </Form.Field>
 
-                                        <Button
-                                            type='submit'
-                                            primary
-                                            size='large'>Login
-                                        </Button>
-                                    </div>
+                                    <Button
+                                        content='submit'
+                                        fluid
+                                        primary
+                                        size='large'
+                                        onClick={this.handleSubmit}>Login
+                                    </Button>
                                 </Form>
                         </Segment>
                     </Grid.Column>
