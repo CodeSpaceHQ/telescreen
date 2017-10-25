@@ -1,6 +1,4 @@
-const userModels = require('server/users/user-models');
-
-const User = userModels.User;
+const userModels = require('users/user-models');
 const Admin = userModels.Admin;
 
 const createUser = (data, next) => {
@@ -21,13 +19,14 @@ const info = {
 
   if (data.role === 'admin') {
     // Create an admin.
+    console.log("TestAdmin");
     user = new Admin(info);
   } else {
     next({ err: 'Valid role not found.' });
     return;
   }
 
-  User.findOne({ email: user.email }, (userErr, existingUser) => {
+  Admin.findOne({ email: user.email }, (userErr, existingUser) => {
     if (userErr) {
       next(userErr);
     } else if (existingUser) {

@@ -1,6 +1,6 @@
 const express = require('express');
-const userManager = require('server/users/user-manager');
-const authManager = require('server/auth/auth-manager');
+const userManager = require('users/user-manager');
+const authManager = require('auth/auth-manager');
 
 const userRouter = express.Router();
 
@@ -15,7 +15,7 @@ userRouter.post('/', (req, res) => {
   });
 });
 
-userRouter.get('/', authManager.verify, authManager.validateUidPermissions, (req, res) => {
+userRouter.get('/', authManager.verify, (req, res) => {
   const uid = res.locals.uid;
   userManager.getUserById(uid, {}, (err, user) => {
     if (err) {
@@ -34,4 +34,4 @@ userRouter.get('/', authManager.verify, authManager.validateUidPermissions, (req
   });
 });
 
-module.exports = { userRouter };
+module.exports = { router: userRouter };
