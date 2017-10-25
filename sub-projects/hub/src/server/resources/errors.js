@@ -12,8 +12,11 @@ function errorFactory(newMessage, newStatus) {
 const InvalidLoginInfoError = errorFactory('Invalid username/password.', 401);
 const InvalidSessionError = errorFactory('Invalid session token.', 401);
 
+const MissingParametersError = errorFactory('Required parameters not found.', 400);
+
 module.exports = {
   errorFactory,
   InvalidLoginInfoError,
   InvalidSessionError,
+  MissingParametersError,
 };
