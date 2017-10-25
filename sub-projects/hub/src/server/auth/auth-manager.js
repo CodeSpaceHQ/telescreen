@@ -6,7 +6,7 @@ const authErrors = require('resources/errors.js');
  * Given a valid email/password, generates a session and returns the id.
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @returns {Promise<string, Error>} - Resolves with the user and expiration,
+ * @returns {Promise<Object, Error>} - Resolves with the user and expiration,
  * or rejects with an error that contains a status code and a message.
  */
 const login = async (req, res) => {
@@ -39,16 +39,9 @@ const login = async (req, res) => {
       user: {
         uid: rawUser.id,
         email: rawUser.email,
-        name: rawUser.name,
-        role: rawUser.role,
       },
       expires: req.session.cookie.expires,
     };
-
-    if (rawUser.role === 'student') {
-      output.user.points = rawUser.points;
-      output.user.isApproved = rawUser.isApproved;
-    }
 
     return output;
   } catch (err) {
