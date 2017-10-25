@@ -1,6 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Form, Input, Header, Image, Grid, Segment } from 'semantic-ui-react';
+import logger from 'utils/logger';
+import {
+  Button,
+  Form,
+  Input,
+  Header,
+  Image,
+  Grid,
+  Segment } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import binaryEye from './Binary-Eye-2.png';
 
@@ -31,7 +39,7 @@ export default class LoginPage extends React.Component {
         this.setState({ redirectToHome: true });
       })
       .catch((error) => {
-        console.log(error);
+        logger.error(error);
       });
   }
   render() {
@@ -77,7 +85,7 @@ export default class LoginPage extends React.Component {
                     type='email'
                     placeholder='E-mail Address'
                     onChange={this.handleChange}
-                    value={this.props.email}
+                    value={this.state.email}
                   />
                 </Form.Field>
                 <Form.Field>
@@ -89,10 +97,9 @@ export default class LoginPage extends React.Component {
                     type='password'
                     placeholder='Password'
                     onChange={this.handleChange}
-                    value={this.props.password}
+                    value={this.state.password}
                   />
                 </Form.Field>
-
                 <Button
                   type='submit'
                   fluid
