@@ -18,12 +18,12 @@ export default class LoginPage extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    handleChange(env, stuff) {
-        this.setState({ [env.name]: env.value })
-        console.log('Changing stuff');
-        console.log('variable ' + env.name + ' ' + env.value);
-        //Working on this still!!!!!!!!!!!!!
-    }
+    
+    handleChange({ target }) {
+            this.setState({
+              [target.name]: target.value
+            });
+          }
 
     handleSubmit() {
         console.log("Clicked Login");
@@ -87,6 +87,7 @@ export default class LoginPage extends React.Component {
                                             type='email'
                                             placeholder='E-mail Address'
                                             onChange={this.handleChange}
+                                            value={ this.props.email }
                                         />
                                     </Form.Field>
                                     <Form.Field className="ui left icon input">
@@ -97,6 +98,7 @@ export default class LoginPage extends React.Component {
                                             type='password'
                                             placeholder='Password'
                                             onChange={this.handleChange}
+                                            value={ this.props.password }
                                         />
                                     </Form.Field>
 
