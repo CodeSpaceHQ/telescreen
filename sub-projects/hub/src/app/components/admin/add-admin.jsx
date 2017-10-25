@@ -13,18 +13,17 @@ class AddAdmin extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(ev) {
-    const target = ev.target;
-    const value = target.value;
-    const name = target.name;
-
+  handleChange(event) {
     this.setState({
-      [name]: value,
+      value: event.target.value,
     });
   }
 
-  handleSubmit() {
-    console.log('Button was clicked');
+  handleSubmit(event) {
+    event.preventDefault();
+    this.setState({
+      value: '',
+    });
   }
 
   render() {
