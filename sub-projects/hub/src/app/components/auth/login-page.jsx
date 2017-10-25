@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Form, Input, Header, TextArea, Image, Icon, Container, Grid, Segment, GridColumn } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import binaryEye from './Binary-Eye-2.png';
+import axios from 'axios'
 
 export default class LoginPage extends React.Component {
 
@@ -9,10 +10,8 @@ export default class LoginPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
             email: '',
-            submittedName: '',
-            submittedEmail: '',
+            password: '',
             redirectToHome: false,
         }
         this.handleChange = this.handleChange.bind(this);
@@ -26,29 +25,25 @@ export default class LoginPage extends React.Component {
           }
 
     handleSubmit() {
-        console.log("Clicked Login");
-        this.setState({ redirectToHome: true })
-        // const { name, email } = this.state
-        // this.setState({ submittedName: name, submittedEmail: email })
-        // console.log("submitted name is: "+ submittedName);
-        // request.post(
-        //     'http://127.0.0.1:3000/api/auth',
-        //     { json: { name: JSON.stringify(name) } },
-        //     function (error, response, body) {
-        //         if (!error && response.statusCode == 200) {
-        //             console.log("request successful")
-        //         }
-        //         else {
-        //             console.log("error: " + error);
-        //         }
-        //     }
-        // );
-        //Working on this still!!!!!!!!!!!
+        axios.post('http://127.0.0.1:3000/api/auth', {
+            email: this.state.email, 
+            password: this.state.password 
+          })
+          .then(function (response) {
+            console.log(response);
+            //this.setState({ redirectToHome: true })
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        //STILL WORKING ON THIS
     }
     render() {
         if (this.state.redirectToHome) {
             return (
               <Redirect to={{ pathname: '/' }}/>
+              //CHANGE TO HOME PATHNAME
             )
         }
         
@@ -79,9 +74,10 @@ export default class LoginPage extends React.Component {
                         </Header>
                             <Segment>
                                 <Form className="ui large form">
-                                    <Form.Field className="ui left icon input">
-                                        <Icon name='user' />
+                                    <Form.Field>
                                         <Input
+                                            icon='user'
+                                            iconPosition='left'
                                             required
                                             name='email'
                                             type='email'
@@ -90,9 +86,10 @@ export default class LoginPage extends React.Component {
                                             value={ this.props.email }
                                         />
                                     </Form.Field>
-                                    <Form.Field className="ui left icon input">
-                                        <Icon name='lock' />
+                                    <Form.Field>
                                         <Input
+                                            icon='lock'
+                                            iconPosition='left'
                                             required
                                             name='password'
                                             type='password'
