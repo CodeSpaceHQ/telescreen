@@ -1,42 +1,35 @@
 const userModels = require('users/user-models');
+
+const errors = require('resources/errors.js');
+
 const Admin = userModels.Admin;
 
-const createUser = (data, next) => {
+async function createAdmin(data) {
+  try {
     // Ensure the required data is available.
     if (!data) {
-      next({ err: 'Required parameters not found.' });
-      return;
+      throw new errors.MissingParametersError();
     }
 
-const info = {
-    email: data.email,
-    password: data.password,
-    name: data.name,
-    role: data.role,
-  };
+    const info = {
+      email: data.email,
+      password: data.password,
+    };
 
-  let user;
+    const admin = new Admin(info);
 
-  if (data.role === 'admin') {
-    // Create an admin.
-    console.log("TestAdmin");
-    user = new Admin(info);
-  } else {
-    next({ err: 'Valid role not found.' });
-    return;
+    const existing = await Admin.findOne({ email: admin.email }).exec();
+
+    if (existing) {
+      throw new errors.ExistingAccountError();
+    }
+
+    const created = await admin.save();
+
+    return created.id;
+  } catch (err) {
+    throw err;
   }
+}
 
-  Admin.findOne({ email: user.email }, (userErr, existingUser) => {
-    if (userErr) {
-      next(userErr);
-    } else if (existingUser) {
-      next({ err: 'Account with that email address already exists.' });
-    } else {
-      user.save((saveErr, dbUser) => {
-        next(saveErr, (dbUser || {}).id);
-      });
-    }
-  });
-};
-
-module.exports = { createUser};
+module.exports = { createAdmin };
