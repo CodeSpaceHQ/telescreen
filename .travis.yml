@@ -18,6 +18,7 @@ script:
   - node src/server/utils/setup.js
   - yarn install
   - yarn run test
+  - yarn run docs
 deploy:
   provider: pages
   skip_cleanup: true
