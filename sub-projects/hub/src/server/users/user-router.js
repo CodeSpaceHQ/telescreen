@@ -5,6 +5,49 @@ const authManager = require('auth/auth-manager');
 
 const userRouter = express.Router();
 
+/**
+ * @namespace UsersEndpoint
+ */
+
+/**
+ * Create an admin.
+ * 
+ * Note: requires the user to be logged in.
+ * 
+ * #### Request
+ * 
+ * - path: `/api/users`
+ * - verb: POST
+ * 
+ * ```json
+ * {
+ *   "email": string,
+ *   "password": string
+ * }
+ * ```
+ * 
+ * #### Response
+ * 
+ * Status 201 - Success
+ * 
+ * ```json
+ * {
+ *   "uid": string
+ * }
+ * ```
+ * 
+ * Status 400 or 401 - Failure
+ * 
+ * ```json
+ * {
+ *   "message": string
+ * }
+ * ```
+ * 
+ * @name createAdmin
+ * @func
+ * @memberOf UsersEndpoint
+ */
 userRouter.post('/', authManager.verify, (req, res) => {
   userManager.createAdmin(req.body)
     .then((uid) => {
