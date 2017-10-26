@@ -14,6 +14,14 @@ global.mongoose = mongoose;
 global.mockgoose = mockgoose;
 global.app = app;
 
-beforeAll(() => connection.open());
+beforeAll(() => {
+  mockgoose(mongoose);
 
-afterAll(() => connection.close());
+  return connection.open();
+});
+
+afterAll((done) => {
+  mongoose.unmock(() => {
+    done();
+  });
+});

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const Schema = mongoose.Schema;
 
@@ -81,6 +82,18 @@ adminSchema.pre('findOneAndUpdate', function preUpdate(next) {
 */
 adminSchema.methods.comparePassword = function comparePassword(password) {
   return bcrypt.compare(password, this.password);
+};
+
+adminSchema.statics.genPassword = async function genPassword() {
+  return new Promise((resolve, reject) => {
+    crypto.randomBytes(10, (err, buf) => {
+      if (err) {
+        return reject(err);
+      }
+
+      return resolve(buf.toString('hex').slice(0, 20));
+    });
+  });
 };
 
 const Admin = mongoose.model('Admin', adminSchema);
