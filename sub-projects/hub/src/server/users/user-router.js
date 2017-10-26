@@ -21,8 +21,7 @@ const userRouter = express.Router();
  * 
  * ```json
  * {
- *   "email": string,
- *   "password": string
+ *   "email": string
  * }
  * ```
  * 

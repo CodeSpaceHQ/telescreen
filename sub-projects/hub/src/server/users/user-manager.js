@@ -1,6 +1,7 @@
 const userModels = require('users/user-models');
 
 const errors = require('resources/errors.js');
+const mailer = require('utils/mailer.js');
 
 const Admin = userModels.Admin;
 
@@ -11,9 +12,11 @@ async function createAdmin(data) {
       throw new errors.MissingParametersError();
     }
 
+    const newPass = await Admin.genPassword();
+
     const info = {
       email: data.email,
-      password: data.password,
+      password: newPass,
     };
 
     const admin = new Admin(info);
@@ -25,6 +28,8 @@ async function createAdmin(data) {
     }
 
     const created = await admin.save();
+
+    await mailer.sendCreatedAdmin(data.email, newPass);
 
     return created.id;
   } catch (err) {
