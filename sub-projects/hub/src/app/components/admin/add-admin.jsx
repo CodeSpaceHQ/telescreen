@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+import logger from 'utils/logger';
 
 import {
   Button,
@@ -18,17 +20,22 @@ class AddAdmin extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange({ target }) {
     this.setState({
-      value: event.target.value,
+      [target.name]: target.value,
     });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    this.setState({
-      value: '',
-    });
+  handleSubmit() {
+    axios.post('http://127.0.0.1:3000/api/users', {
+      email: this.state.email,
+    })
+      .then(() => {
+        this.setState({ email: '' });
+      })
+      .catch((error) => {
+        logger.error(error);
+      });
   }
 
   render() {

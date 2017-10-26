@@ -1,13 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
-import { Button } from 'semantic-ui-react';
-
-export default class LoginPage extends React.Component {
-  render() {
-    return (
-      <div>
-        <Button>Login Page</Button>
-=======
 import axios from 'axios';
 import logger from 'utils/logger';
 import {
@@ -94,7 +85,7 @@ export default class LoginPage extends React.Component {
                     type='email'
                     placeholder='E-mail Address'
                     onChange={this.handleChange}
-                    value={this.state.email}
+                    /* value={this.state.email} */
                   />
                 </Form.Field>
                 <Form.Field>
@@ -121,7 +112,6 @@ export default class LoginPage extends React.Component {
             </Segment>
           </Grid.Column>
         </Grid>
->>>>>>> master
       </div>
     );
   }
