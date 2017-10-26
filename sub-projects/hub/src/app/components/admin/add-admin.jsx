@@ -5,9 +5,11 @@ import logger from 'utils/logger';
 import {
   Button,
   Form,
-  Grid,
+  Input,
   Header,
+  Grid,
   Segment } from 'semantic-ui-react';
+
 
 class AddAdmin extends React.Component {
   constructor(props) {
@@ -19,7 +21,6 @@ class AddAdmin extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleChange({ target }) {
     this.setState({
       [target.name]: target.value,
@@ -42,12 +43,12 @@ class AddAdmin extends React.Component {
     return (
       <div className='login-form'>
         <style>{`
-        body > div,
-        body > div > div,
-        body > div > div > div.login-form {
-          height: 100%;
-        }
-      `}</style>
+                    body > div,
+                    body > div > div,
+                    body > div > div > div.login-form {
+                      height: 100%;
+                    }
+                `}</style>
         <Grid
           textAlign='center'
           style={{ height: '100%' }}
@@ -59,24 +60,29 @@ class AddAdmin extends React.Component {
               color='blue'
               textAlign='center'
             >
-            Add Admin
+                Add Admin
             </Header>
             <Segment>
-              <Form>
-                <Form.Input
-                  fluid
-                  required
-                  label='E-mail Address'
-                  icon='user'
-                  iconPosition='left'
-                  placeholder='E-mail Address'
-                  onChange={this.handleChange}
-                />
+              <Form className='ui large form'>
+                <Form.Field>
+                  <Input
+                    icon='user'
+                    iconPosition='left'
+                    required
+                    name='email'
+                    type='email'
+                    placeholder='E-mail Address'
+                    onChange={this.handleChange}
+                    value={this.state.email}
+                  />
+                </Form.Field>
                 <Button
-                  primary
-                  fluid
+                  type='submit'
                   icon='checkmark'
                   content='Submit'
+                  fluid
+                  primary
+                  size='large'
                   onClick={this.handleSubmit}
                 />
               </Form>

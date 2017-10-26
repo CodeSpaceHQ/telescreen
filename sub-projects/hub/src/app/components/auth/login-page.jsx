@@ -85,7 +85,7 @@ export default class LoginPage extends React.Component {
                     type='email'
                     placeholder='E-mail Address'
                     onChange={this.handleChange}
-                    /* value={this.state.email} */
+                    value={this.state.email}
                   />
                 </Form.Field>
                 <Form.Field>
