@@ -8,7 +8,10 @@ import {
   Input,
   Header,
   Grid,
-  Segment } from 'semantic-ui-react';
+  Segment,
+} from 'semantic-ui-react';
+
+import '../app.css';
 
 
 class AddAdmin extends React.Component {
@@ -21,6 +24,7 @@ class AddAdmin extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   handleChange({ target }) {
     this.setState({
       [target.name]: target.value,
@@ -41,20 +45,12 @@ class AddAdmin extends React.Component {
 
   render() {
     return (
-      <div className='login-form'>
-        <style>{`
-                    body > div,
-                    body > div > div,
-                    body > div > div > div.login-form {
-                      height: 100%;
-                    }
-                `}</style>
+      <div className='centered'>
         <Grid
+          className='center aligned grid'
           textAlign='center'
-          style={{ height: '100%' }}
-          verticalAlign='middle'
         >
-          <Grid.Column style={{ maxWidth: 450 }}>
+          <Grid.Column>
             <Header
               as='h2'
               color='blue'
@@ -63,7 +59,7 @@ class AddAdmin extends React.Component {
                 Add Admin
             </Header>
             <Segment>
-              <Form className='ui large form'>
+              <Form>
                 <Form.Field>
                   <Input
                     icon='user'

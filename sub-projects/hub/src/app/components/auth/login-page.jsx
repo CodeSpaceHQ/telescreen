@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import logger from 'utils/logger';
+
 import {
   Button,
   Form,
@@ -8,10 +10,10 @@ import {
   Header,
   Image,
   Grid,
-  Segment } from 'semantic-ui-react';
-import { Redirect } from 'react-router-dom';
-import binaryEye from './Binary-Eye-2.png';
+  Segment,
+} from 'semantic-ui-react';
 
+import binaryEye from './Binary-Eye-2.png';
 
 export default class LoginPage extends React.Component {
   constructor(props) {
@@ -21,9 +23,11 @@ export default class LoginPage extends React.Component {
       password: '',
       redirectToHome: false,
     };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   handleChange({ target }) {
     this.setState({
       [target.name]: target.value,
@@ -42,6 +46,7 @@ export default class LoginPage extends React.Component {
         logger.error(error);
       });
   }
+
   render() {
     if (this.state.redirectToHome) {
       return (
@@ -50,23 +55,12 @@ export default class LoginPage extends React.Component {
       );
     }
     return (
-      <div className='login-form'>
-        <style>{`
-                    body > div,
-                    body > div > div,
-                    body > div > div > div.login-form {
-                      height: 100%;
-                    }
-                `}</style>
-
+      <div className='centered'>
         {/* <Image src={binaryEye}/> */}
-
         <Grid
           textAlign='center'
-          style={{ height: '100%' }}
-          verticalAlign='middle'
         >
-          <Grid.Column style={{ maxWidth: 450 }}>
+          <Grid.Column>
             <Header
               as='h2'
               color='blue'
@@ -75,7 +69,7 @@ export default class LoginPage extends React.Component {
                 Welcome to Telescreen!
             </Header>
             <Segment>
-              <Form className='ui large form'>
+              <Form>
                 <Form.Field>
                   <Input
                     icon='user'
