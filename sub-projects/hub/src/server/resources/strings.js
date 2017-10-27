@@ -1,3 +1,3 @@
 module.exports = {
-  cookieName: 'cpceed.sid',
+  cookieName: 'telescreen.sid',
 };
