@@ -16,10 +16,19 @@ const ExistingAccountError = errorFactory('Account with that email address alrea
 
 const MissingParametersError = errorFactory('Required parameters not found.', 400);
 
+class NonUniqueIDError extends Error {
+  constructor(args) {
+    super(args);
+
+    this.message = 'An identical id already exists.';
+  }
+}
+
 module.exports = {
   errorFactory,
   InvalidLoginInfoError,
   InvalidSessionError,
   ExistingAccountError,
   MissingParametersError,
+  NonUniqueIDError,
 };
