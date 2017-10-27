@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 import logger from 'utils/logger';
 
 import {
@@ -8,20 +7,18 @@ import {
   Form,
   Input,
   Header,
-  Image,
   Grid,
   Segment,
 } from 'semantic-ui-react';
 
-import binaryEye from './Binary-Eye-2.png';
+import '../app.css';
 
-export default class LoginPage extends React.Component {
+
+class AddAdmin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      password: '',
-      redirectToHome: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -35,12 +32,11 @@ export default class LoginPage extends React.Component {
   }
 
   handleSubmit() {
-    axios.post('http://127.0.0.1:3000/api/auth', {
+    axios.post('http://127.0.0.1:3000/api/users', {
       email: this.state.email,
-      password: this.state.password,
     })
       .then(() => {
-        this.setState({ redirectToHome: true });
+        this.setState({ email: '' });
       })
       .catch((error) => {
         logger.error(error);
@@ -48,16 +44,10 @@ export default class LoginPage extends React.Component {
   }
 
   render() {
-    if (this.state.redirectToHome) {
-      return (
-        <Redirect to={{ pathname: '/add-admin' }} />
-        // CHANGE TO HOME PATHNAME WHEN WE MAKE IT
-      );
-    }
     return (
       <div className='centered'>
-        {/* <Image src={binaryEye}/> */}
         <Grid
+          className='center aligned grid'
           textAlign='center'
         >
           <Grid.Column>
@@ -66,7 +56,7 @@ export default class LoginPage extends React.Component {
               color='blue'
               textAlign='center'
             >
-                Welcome to Telescreen!
+                Add Admin
             </Header>
             <Segment>
               <Form>
@@ -82,26 +72,15 @@ export default class LoginPage extends React.Component {
                     value={this.state.email}
                   />
                 </Form.Field>
-                <Form.Field>
-                  <Input
-                    icon='lock'
-                    iconPosition='left'
-                    required
-                    name='password'
-                    type='password'
-                    placeholder='Password'
-                    onChange={this.handleChange}
-                    value={this.state.password}
-                  />
-                </Form.Field>
                 <Button
                   type='submit'
+                  icon='checkmark'
+                  content='Submit'
                   fluid
                   primary
                   size='large'
                   onClick={this.handleSubmit}
-                >Login
-                </Button>
+                />
               </Form>
             </Segment>
           </Grid.Column>
@@ -110,3 +89,5 @@ export default class LoginPage extends React.Component {
     );
   }
 }
+
+export default AddAdmin;
