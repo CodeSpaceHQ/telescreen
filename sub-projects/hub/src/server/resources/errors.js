@@ -16,13 +16,7 @@ const ExistingAccountError = errorFactory('Account with that email address alrea
 
 const MissingParametersError = errorFactory('Required parameters not found.', 400);
 
-class NonUniqueIDError extends Error {
-  constructor(args) {
-    super(args);
-
-    this.message = 'An identical id already exists.';
-  }
-}
+const MaxRetriesError = errorFactory('Max number of retries exceeded for operation.', 500);
 
 module.exports = {
   errorFactory,
@@ -30,5 +24,5 @@ module.exports = {
   InvalidSessionError,
   ExistingAccountError,
   MissingParametersError,
-  NonUniqueIDError,
+  MaxRetriesError,
 };

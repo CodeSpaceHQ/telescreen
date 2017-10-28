@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const crypto = require('crypto');
 
+const values = require('resources/values.js');
+const dbUtils = require('utils/db.js');
 const errors = require('resources/errors.js');
 
 const clientSchema = new mongoose.Schema({
@@ -20,24 +21,23 @@ const clientSchema = new mongoose.Schema({
 });
 
 clientSchema.statics.genId = async function genId() {
+  let id;
+  let client;
+
   try {
-    const id = await new Promise((resolve, reject) => {
-      crypto.randomBytes(32, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
+    for (let i = 0; i < values.maxRetries; i += 1) {
+      /* eslint-disable no-await-in-loop */
+      id = await dbUtils.genRandom(25);
 
-        return resolve(buf.toString('hex'));
-      });
-    });
+      client = await this.findOne({ id }).exec();
+      /* eslint-enable no-await-in-loop */
 
-    const client = await this.findOne({ id }).exec();
-
-    if (client) {
-      throw new errors.NonUniqueIDError();
+      if (!client) {
+        return id;
+      }
     }
 
-    return id;
+    throw new errors.MaxRetriesError();
   } catch (err) {
     throw err;
   }
