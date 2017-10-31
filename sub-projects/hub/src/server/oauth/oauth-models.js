@@ -4,6 +4,8 @@ const values = require('resources/values.js');
 const dbUtils = require('utils/db.js');
 const errors = require('resources/errors.js');
 
+const Schema = mongoose.Schema;
+
 async function genUnique(len) {
   let id;
   let client;
@@ -30,11 +32,6 @@ async function genUnique(len) {
 // Client
 
 const clientSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    unique: true,
-    required: true,
-  },
   redirectURL: {
     type: String,
     required: true,
@@ -45,10 +42,6 @@ const clientSchema = new mongoose.Schema({
   },
 });
 
-clientSchema.statics.genId = async function genId() {
-  return genUnique.bind(this)(25);
-};
-
 // Refresh Token
 
 const refreshSchema = new mongoose.Schema({
@@ -57,9 +50,9 @@ const refreshSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
-  clientId: {
-    type: String,
-    required: true,
+  Client: {
+    type: Schema.Types.ObjectId,
+    ref: 'Client',
   },
 });
 
@@ -79,9 +72,9 @@ const tokenSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  clientId: {
-    type: String,
-    required: true,
+  Client: {
+    type: Schema.Types.ObjectId,
+    ref: 'Client',
   },
 });
 
@@ -101,9 +94,9 @@ const codeSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  clientId: {
-    type: String,
-    required: true,
+  Client: {
+    type: Schema.Types.ObjectId,
+    ref: 'Client',
   },
 });
 
