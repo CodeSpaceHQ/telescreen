@@ -27,6 +27,8 @@ async function genUnique(len) {
   }
 }
 
+// Client
+
 const clientSchema = new mongoose.Schema({
   id: {
     type: String,
@@ -47,10 +49,34 @@ clientSchema.statics.genId = async function genId() {
   return genUnique.bind(this)(25);
 };
 
+// Refresh Token
+
+const refreshSchema = new mongoose.Schema({
+  refresh: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  clientId: {
+    type: String,
+    required: true,
+  },
+});
+
+clientSchema.statics.genRefresh = async function genRefresh() {
+  return genUnique.bind(this)(40);
+};
+
+// Access Token
+
 const tokenSchema = new mongoose.Schema({
   token: {
     type: String,
     unique: true,
+    required: true,
+  },
+  expires: {
+    type: Date,
     required: true,
   },
   clientId: {
@@ -60,13 +86,19 @@ const tokenSchema = new mongoose.Schema({
 });
 
 clientSchema.statics.genToken = async function genToken() {
-  return genUnique.bind(this)(32);
+  return genUnique.bind(this)(40);
 };
+
+// Authorization Code
 
 const codeSchema = new mongoose.Schema({
   code: {
     type: String,
     unique: true,
+    required: true,
+  },
+  expires: {
+    type: Date,
     required: true,
   },
   clientId: {
@@ -76,11 +108,12 @@ const codeSchema = new mongoose.Schema({
 });
 
 clientSchema.statics.genCode = async function genCode() {
-  return genUnique.bind(this)(25);
+  return genUnique.bind(this)(40);
 };
 
 module.exports = {
   Client: mongoose.model('Client', clientSchema),
   Token: mongoose.model('Token', tokenSchema),
+  Refresh: mongoose.model('Refresh', refreshSchema),
   Code: mongoose.model('Code', codeSchema),
 };
