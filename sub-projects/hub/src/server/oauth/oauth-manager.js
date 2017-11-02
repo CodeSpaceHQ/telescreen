@@ -28,7 +28,7 @@ async function getRefreshToken(token) {
 
   try {
     const refresh = await Refresh
-      .findOne({ refresh: token.refresh })
+      .findOne({ refresh: token })
       .populate('Client')
       .exec();
 
@@ -41,8 +41,24 @@ async function getRefreshToken(token) {
   }
 }
 
-async function getAuthorizationCode() {
+async function getAuthorizationCode(code) {
+  logger.info('Getting authorization code.');
 
+  try {
+    const authCode = await Refresh
+      .findOne({ code })
+      .populate('Client')
+      .exec();
+
+    return {
+      code,
+      expiresAt: authCode.expires,
+      client: authCode.Client,
+      redirectUri: authCode.Client.redirectURL,
+    };
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function getClient() {
