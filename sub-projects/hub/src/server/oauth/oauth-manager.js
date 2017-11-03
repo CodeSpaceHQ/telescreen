@@ -46,17 +46,25 @@ async function getAuthorizationCode(code) {
   logger.info('Getting authorization code.');
 
   try {
+    let output;
+
     const authCode = await Refresh
       .findOne({ code })
       .populate('Client')
       .exec();
 
-    return {
-      code,
-      expiresAt: authCode.expires,
-      client: authCode.Client,
-      redirectUri: authCode.Client.redirectURL,
-    };
+    if (!authCode) {
+      output = false;
+    } else {
+      output = {
+        code,
+        expiresAt: authCode.expires,
+        client: authCode.Client,
+        redirectUri: authCode.Client.redirectURL,
+      };
+    }
+
+    return output;
   } catch (err) {
     throw err;
   }
