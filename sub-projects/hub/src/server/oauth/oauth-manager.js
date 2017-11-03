@@ -4,6 +4,7 @@ const {
   Code,
 } = require('./oauth-models.js');
 const logger = require('utils/logger.js');
+const errors = require('resources/errors.js');
 
 async function generateAccessToken() {
   logger.info('Generating access token.');
@@ -61,8 +62,28 @@ async function getAuthorizationCode(code) {
   }
 }
 
-async function getClient() {
+async function getClient(clientId) {
+  logger.info('Getting authorization code.');
 
+  try {
+    const client = await Refresh
+      .findById(clientId)
+      .populate('Client')
+      .exec();
+
+    if (!client) {
+      throw new errors.ClientNotFoundError();
+    }
+
+    /* eslint-disable no-underscore-dangle */
+    return {
+      id: client._id,
+      redirectUris: [client.redirectURL],
+    };
+    /* eslint-enable no-underscore-dangle */
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function saveToken() {
