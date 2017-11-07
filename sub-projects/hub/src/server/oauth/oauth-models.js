@@ -56,7 +56,7 @@ const refreshSchema = new mongoose.Schema({
   },
 });
 
-clientSchema.statics.genRefresh = async function genRefresh() {
+refreshSchema.statics.genRefresh = async function genRefresh() {
   return genUnique.bind(this)(40);
 };
 
@@ -78,7 +78,7 @@ const tokenSchema = new mongoose.Schema({
   },
 });
 
-clientSchema.statics.genToken = async function genToken() {
+tokenSchema.statics.genToken = async function genToken() {
   return genUnique.bind(this)(40);
 };
 
@@ -100,7 +100,7 @@ const codeSchema = new mongoose.Schema({
   },
 });
 
-clientSchema.statics.genCode = async function genCode() {
+codeSchema.statics.genCode = async function genCode() {
   return genUnique.bind(this)(40);
 };
 

@@ -94,8 +94,39 @@ async function getClient(clientId) {
   }
 }
 
-async function saveToken() {
+async function saveToken(token, client) {
+  logger.info('Saving token.');
 
+  try {
+    const tokenString = Token.genToken();
+    let refreshString;
+    if (token.refreshToken) {
+      refreshString = Refresh.genRefresh();
+    }
+
+    const tokenPromise = new Token({
+      token: await tokenString,
+    }).save();
+    let refreshPromise;
+    if (token.refreshToken) {
+      refreshPromise = new Token({
+        refresh: await refreshString,
+      }).save();
+    }
+
+    await tokenPromise;
+    if (token.refreshToken) {
+      await refreshPromise;
+    }
+
+    return {
+      client,
+      accessToken: token.accessToken,
+      refreshToken: token.refreshToken,
+    };
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function saveAuthorizationCode() {
@@ -110,14 +141,11 @@ async function revokeAuthorizationCode() {
 
 }
 
-async function validateScope() {
-
-}
-
 module.exports = {
   generateAccessToken,
   generateRefreshToken,
   generateAuthorizationCode,
+  getAccessToken,
   getRefreshToken,
   getAuthorizationCode,
   getClient,
@@ -125,5 +153,4 @@ module.exports = {
   saveAuthorizationCode,
   revokeToken,
   revokeAuthorizationCode,
-  validateScope,
 };
