@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 const {
   Token,
   Refresh,
@@ -83,12 +85,10 @@ async function getClient(clientId) {
       throw new errors.ClientNotFoundError();
     }
 
-    /* eslint-disable no-underscore-dangle */
     return {
       id: client._id,
       redirectUris: [client.redirectURL],
     };
-    /* eslint-enable no-underscore-dangle */
   } catch (err) {
     throw err;
   }
@@ -129,8 +129,24 @@ async function saveToken(token, client) {
   }
 }
 
-async function saveAuthorizationCode() {
+async function saveAuthorizationCode(code, client) {
+  logger.info('Saving auth code.');
 
+  try {
+    const tokenString = Code.genCode();
+
+    const tokenPromise = new Token({
+      token: await tokenString,
+      expires: code.expiresAt,
+      Client: client._id,
+    }).save();
+
+    await tokenPromise;
+
+    return code;
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function revokeToken() {
