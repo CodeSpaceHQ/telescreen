@@ -25,11 +25,39 @@ router.post('/client', (req, res) => {
     });
 });
 
+/**
+ * As a client, exchange a code for a token.
+ * 
+ * #### Request
+ * 
+ * - path: `/api/auth`
+ * - verb: POST
+ * - Content-Type: `application/x-www-form-urlencoded`
+ * 
+ * ```
+ * client_id: String,
+ * code: String,
+ * grant_type: String,
+ * redirect_uri: String
+ * ```
+ * 
+ * #### Response
+ * 
+ * @name token
+ * @func
+ * @memberOf OAuth2Endpoint
+ */
 router.post('/token', (request, response) => {
   const req = new Request(request);
   const res = new Response(response);
 
-  oauth.token(req, res)
+  oauth.token(req, res, {
+    requireClientAuthentication: {
+      authorization_code: false,
+      refresh_token: false,
+      password: false,
+    },
+  })
     .then((stuff) => {
       response.status(200).json({ stuff }).end();
     })
