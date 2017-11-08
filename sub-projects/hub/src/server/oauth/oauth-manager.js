@@ -26,6 +26,29 @@ async function generateAuthorizationCode() {
   return Code.genCode();
 }
 
+async function getAccessToken(token) {
+  logger.info('Getting access token.');
+
+  try {
+    let output = false;
+    const access = Token
+      .findOne({ token })
+      .populate('Client')
+      .exec();
+
+    if (access) {
+      output = {
+        accessToken: token,
+        client: access.Client,
+      };
+    }
+
+    return output;
+  } catch (err) {
+    throw err;
+  }
+}
+
 async function getRefreshToken(token) {
   logger.info('Getting refresh token.');
 
