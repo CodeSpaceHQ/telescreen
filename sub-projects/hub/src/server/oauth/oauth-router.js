@@ -15,6 +15,43 @@ const router = express.Router();
  * @namespace OAuth2Endpoint
  */
 
+/**
+ * As a client, register yourself with the server.
+ * 
+ * #### Request
+ * 
+ * - path: `/api/oauth/client`
+ * - verb: POST
+ * 
+ * ```json
+ * {
+ *   "redirectURL": String,
+ *   "name": String
+ * }
+ * ```
+ * 
+ * #### Response
+ * 
+ * Status 200 - Success
+ * 
+ * ```json
+ * {
+ *   "clientId": String
+ * }
+ * ```
+ * 
+ * Status 400 - Failure
+ * 
+ * ```json
+ * {
+ *   "message": String
+ * }
+ * ```
+ * 
+ * @name client
+ * @func
+ * @memberOf OAuth2Endpoint
+ */
 router.post('/client', (req, res) => {
   oauthManager.createClient(req.body.redirectURL, req.body.name)
     .then((clientId) => {
@@ -30,7 +67,7 @@ router.post('/client', (req, res) => {
  * 
  * #### Request
  * 
- * - path: `/api/auth`
+ * - path: `/api/oauth/token`
  * - verb: POST
  * - Content-Type: `application/x-www-form-urlencoded`
  * 
@@ -42,6 +79,31 @@ router.post('/client', (req, res) => {
  * ```
  * 
  * #### Response
+ * 
+ * Status 200 - Success
+ * 
+ * ```json
+ * {
+ *   "accessToken": String,
+ *   "accessTokenExpiresAt": String,
+ *   "refreshToken": String,
+ *   "refreshTokenExpiresAt": String,
+ *   "client": {
+ *      "id": String
+ *    },
+ *   "user": {}
+ * }
+ * ```
+ * 
+ * Failure
+ * 
+ * ```json
+ * {
+ *   "code": Number,
+ *   "message": String,
+ *   "name": String
+ * }
+ * ```
  * 
  * @name token
  * @func
@@ -58,11 +120,11 @@ router.post('/token', (request, response) => {
       password: false,
     },
   })
-    .then((stuff) => {
-      response.status(200).json({ stuff }).end();
+    .then((token) => {
+      response.status(200).json(token).end();
     })
-    .catch((stuff) => {
-      response.status(400).json({ stuff }).end();
+    .catch((err) => {
+      response.status(err.code).json(err).end();
     });
 });
 
@@ -71,7 +133,7 @@ router.post('/token', (request, response) => {
  * 
  * #### Request
  * 
- * - path: `/api/auth`
+ * - path: `/api/oauth/authorize`
  * - verb: POST
  * 
  * ```json
