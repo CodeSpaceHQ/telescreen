@@ -106,11 +106,15 @@ async function saveToken(token, client) {
 
     const tokenPromise = new Token({
       token: await tokenString,
+      expires: token.accessTokenExpiresAt,
+      Client: client._id,
     }).save();
     let refreshPromise;
     if (token.refreshToken) {
-      refreshPromise = new Token({
+      refreshPromise = new Refresh({
         refresh: await refreshString,
+        expires: token.refreshTokenExpiresAt,
+        Client: client._id,
       }).save();
     }
 
