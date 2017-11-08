@@ -4,12 +4,22 @@ const OAuthServer = require('oauth2-server');
 const oauthManager = require('./oauth-manager.js');
 
 const oauth = new OAuthServer({
-  model: oauthManager,
+  model: oauthManager.model,
 });
 
 const Request = OAuthServer.Request;
 const Response = OAuthServer.Response;
 const router = express.Router();
+
+router.post('/client', (req, res) => {
+  oauthManager.createClient(req.body.redirectURL, req.body.name)
+    .then((clientId) => {
+      res.status(200).json({ clientId }).end();
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message }).end();
+    });
+});
 
 router.post('/token', (request, response) => {
   const req = new Request(request);

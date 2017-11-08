@@ -1,12 +1,15 @@
 /* eslint-disable no-underscore-dangle */
 
 const {
+  Client,
   Token,
   Refresh,
   Code,
 } = require('./oauth-models.js');
 const logger = require('utils/logger.js');
 const errors = require('resources/errors.js');
+
+// OAuth2 Server Model
 
 async function generateAccessToken() {
   logger.info('Generating access token.');
@@ -210,16 +213,36 @@ async function revokeAuthorizationCode(code) {
   }
 }
 
+// Other functionality
+
+async function createClient(redirectURL, name) {
+  logger.info('Creating client.');
+
+  try {
+    const client = await new Client({
+      redirectURL,
+      name,
+    }).save();
+
+    return client._id;
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = {
-  generateAccessToken,
-  generateRefreshToken,
-  generateAuthorizationCode,
-  getAccessToken,
-  getRefreshToken,
-  getAuthorizationCode,
-  getClient,
-  saveToken,
-  saveAuthorizationCode,
-  revokeToken,
-  revokeAuthorizationCode,
+  model: {
+    generateAccessToken,
+    generateRefreshToken,
+    generateAuthorizationCode,
+    getAccessToken,
+    getRefreshToken,
+    getAuthorizationCode,
+    getClient,
+    saveToken,
+    saveAuthorizationCode,
+    revokeToken,
+    revokeAuthorizationCode,
+  },
+  createClient,
 };
