@@ -153,8 +153,21 @@ async function saveAuthorizationCode(code, client) {
   }
 }
 
-async function revokeToken() {
+async function revokeToken(token) {
+  logger.info('Revoking token.');
 
+  try {
+    const refresh = Refresh.findOneAndRemove({ refresh: token.refresh }).exec();
+    let output = false;
+
+    if (refresh) {
+      output = true;
+    }
+
+    return output;
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function revokeAuthorizationCode() {
