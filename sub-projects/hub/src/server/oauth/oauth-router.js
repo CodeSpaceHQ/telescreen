@@ -62,7 +62,10 @@ router.post('/token', (request, response) => {
  * {
  *   "authorizationCode": String,
  *   "expiresAt": Date,
- *   "redirectUri": String
+ *   "redirectUri": String,
+ *   "client": {
+ *     "id": String
+ *   }
  * }
  * ```
  * 

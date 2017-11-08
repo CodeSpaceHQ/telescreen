@@ -163,17 +163,20 @@ async function saveAuthorizationCode(code, client) {
   logger.info('Saving auth code.');
 
   try {
-    const tokenString = Code.genCode();
-
-    const tokenPromise = new Token({
-      token: await tokenString,
+    const codePromise = new Code({
+      code: code.authorizationCode,
       expires: code.expiresAt,
       Client: client._id,
     }).save();
 
-    await tokenPromise;
+    await codePromise;
 
-    return code;
+    return {
+      ...code,
+      client: {
+        id: client.id,
+      },
+    };
   } catch (err) {
     throw err;
   }
