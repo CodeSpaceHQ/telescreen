@@ -170,8 +170,21 @@ async function revokeToken(token) {
   }
 }
 
-async function revokeAuthorizationCode() {
+async function revokeAuthorizationCode(code) {
+  logger.info('Revoking authorization code.');
 
+  try {
+    const authCode = Code.findOneAndRemove({ code: code.code }).exec();
+    let output = false;
+
+    if (authCode) {
+      output = true;
+    }
+
+    return output;
+  } catch (err) {
+    throw err;
+  }
 }
 
 module.exports = {
