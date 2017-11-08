@@ -28,7 +28,17 @@ router.post('/authorize', (request, response) => {
   const req = new Request(request);
   const res = new Response(response);
 
-  oauth.authorize(req, res)
+  oauth.authorize(req, res, {
+    authenticateHandler: {
+      handle: (rq) => {
+        if (!rq.user) {
+          return false;
+        }
+
+        return rq.user;
+      },
+    },
+  })
     .then((stuff) => {
       response.status(200).json({ stuff }).end();
     })
