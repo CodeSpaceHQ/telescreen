@@ -129,21 +129,15 @@ async function saveToken(token, client) {
   logger.info('Saving token.');
 
   try {
-    const tokenString = Token.genToken();
-    let refreshString;
-    if (token.refreshToken) {
-      refreshString = Refresh.genRefresh();
-    }
-
     const tokenPromise = new Token({
-      token: await tokenString,
+      token: token.accessToken,
       expires: token.accessTokenExpiresAt,
       Client: mongoose.Types.ObjectId(client.id),
     }).save();
     let refreshPromise;
     if (token.refreshToken) {
       refreshPromise = new Refresh({
-        refresh: await refreshString,
+        refresh: token.refreshToken,
         expires: token.refreshTokenExpiresAt,
         Client: mongoose.Types.ObjectId(client.id),
       }).save();
@@ -155,9 +149,14 @@ async function saveToken(token, client) {
     }
 
     return {
-      client,
       accessToken: token.accessToken,
+      accessTokenExpiresAt: token.accessTokenExpiresAt,
       refreshToken: token.refreshToken,
+      refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+      client: {
+        id: client.id,
+      },
+      user: {},
     };
   } catch (err) {
     throw err;
