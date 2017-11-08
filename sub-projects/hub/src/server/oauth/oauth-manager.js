@@ -1,5 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
+const mongoose = require('mongoose');
+
 const {
   Client,
   Token,
@@ -87,8 +89,11 @@ async function getAuthorizationCode(code) {
       output = {
         code,
         expiresAt: authCode.expires,
-        client: authCode.Client,
+        client: {
+          id: authCode.Client._id.toString(),
+        },
         redirectUri: authCode.Client.redirectURL,
+        user: {},
       };
     }
 
@@ -111,7 +116,7 @@ async function getClient(clientId) {
     }
 
     return {
-      id: client._id,
+      id: client._id.toString(),
       redirectUris: [client.redirectURL],
       grants: ['authorization_code', 'password', 'refresh_token'],
     };
@@ -133,14 +138,14 @@ async function saveToken(token, client) {
     const tokenPromise = new Token({
       token: await tokenString,
       expires: token.accessTokenExpiresAt,
-      Client: client.id,
+      Client: mongoose.Types.ObjectId(client.id),
     }).save();
     let refreshPromise;
     if (token.refreshToken) {
       refreshPromise = new Refresh({
         refresh: await refreshString,
         expires: token.refreshTokenExpiresAt,
-        Client: client.id,
+        Client: mongoose.Types.ObjectId(client.id),
       }).save();
     }
 
@@ -166,7 +171,7 @@ async function saveAuthorizationCode(code, client) {
     const codePromise = new Code({
       code: code.authorizationCode,
       expires: code.expiresAt,
-      Client: client.id,
+      Client: mongoose.Types.ObjectId(client.id),
     }).save();
 
     await codePromise;
