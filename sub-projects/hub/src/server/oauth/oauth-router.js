@@ -40,13 +40,7 @@ router.post('/authorize', (request, response) => {
 
   oauth.authorize(req, res, {
     authenticateHandler: {
-      handle: (rq) => {
-        if (!rq.user) {
-          return false;
-        }
-
-        return rq.user;
-      },
+      handle: rq => rq.user,
     },
   })
     .then((stuff) => {
