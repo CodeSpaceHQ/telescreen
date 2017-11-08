@@ -99,12 +99,11 @@ async function getAuthorizationCode(code) {
 }
 
 async function getClient(clientId) {
-  logger.info('Getting authorization code.');
+  logger.info('Getting client.');
 
   try {
-    const client = await Refresh
+    const client = await Client
       .findById(clientId)
-      .populate('Client')
       .exec();
 
     if (!client) {
@@ -114,6 +113,7 @@ async function getClient(clientId) {
     return {
       id: client._id,
       redirectUris: [client.redirectURL],
+      grants: ['authorization_code', 'password', 'refresh_token'],
     };
   } catch (err) {
     throw err;

@@ -11,6 +11,10 @@ const Request = OAuthServer.Request;
 const Response = OAuthServer.Response;
 const router = express.Router();
 
+/**
+ * @namespace OAuth2Endpoint
+ */
+
 router.post('/client', (req, res) => {
   oauthManager.createClient(req.body.redirectURL, req.body.name)
     .then((clientId) => {
@@ -34,6 +38,38 @@ router.post('/token', (request, response) => {
     });
 });
 
+/**
+ * As a user, create an authorization code for a specific client.
+ * 
+ * #### Request
+ * 
+ * - path: `/api/auth`
+ * - verb: POST
+ * 
+ * ```json
+ * {
+ *   "client_id": String,
+ *   "state": String,
+ *   "response_type": String
+ * }
+ * ```
+ * 
+ * #### Response
+ * 
+ * Status 200 - Success
+ * 
+ * ```json
+ * {
+ *   "authorizationCode": String,
+ *   "expiresAt": Date,
+ *   "redirectUri": String
+ * }
+ * ```
+ * 
+ * @name authorize
+ * @func
+ * @memberOf OAuth2Endpoint
+ */
 router.post('/authorize', (request, response) => {
   const req = new Request(request);
   const res = new Response(response);
@@ -43,11 +79,11 @@ router.post('/authorize', (request, response) => {
       handle: rq => rq.user,
     },
   })
-    .then((stuff) => {
-      response.status(200).json({ stuff }).end();
+    .then((code) => {
+      response.status(200).json(code).end();
     })
-    .catch((stuff) => {
-      response.status(400).json({ stuff }).end();
+    .catch((err) => {
+      response.status(400).json({ message: err.message }).end();
     });
 });
 
