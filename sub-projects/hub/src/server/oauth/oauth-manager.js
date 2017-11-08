@@ -76,7 +76,7 @@ async function getAuthorizationCode(code) {
   try {
     let output;
 
-    const authCode = await Refresh
+    const authCode = await Code
       .findOne({ code })
       .populate('Client')
       .exec();
@@ -133,14 +133,14 @@ async function saveToken(token, client) {
     const tokenPromise = new Token({
       token: await tokenString,
       expires: token.accessTokenExpiresAt,
-      Client: client._id,
+      Client: client.id,
     }).save();
     let refreshPromise;
     if (token.refreshToken) {
       refreshPromise = new Refresh({
         refresh: await refreshString,
         expires: token.refreshTokenExpiresAt,
-        Client: client._id,
+        Client: client.id,
       }).save();
     }
 
@@ -166,7 +166,7 @@ async function saveAuthorizationCode(code, client) {
     const codePromise = new Code({
       code: code.authorizationCode,
       expires: code.expiresAt,
-      Client: client._id,
+      Client: client.id,
     }).save();
 
     await codePromise;
