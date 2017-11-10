@@ -52,7 +52,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes.
-app.use('/', express.static(`${__dirname}/../../public`));
+app.use('/', express.static(`${__dirname}/../../public/app`));
+app.use('/auth', express.static(`${__dirname}/../../public/oauth`));
 app.use('/api', apiRouter);
 
 // 404.
