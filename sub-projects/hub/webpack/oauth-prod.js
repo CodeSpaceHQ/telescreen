@@ -1,10 +1,9 @@
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 
-const base = require('./app-base.js');
+const base = require('./oauth-base.js');
 
-const appProd = webpackMerge(base, {
-
+const oauthProd = webpackMerge(base, {
   plugins: [
     // Resolve global constant ENV to 'prod' during build
     new webpack.DefinePlugin({
@@ -13,4 +12,4 @@ const appProd = webpackMerge(base, {
   ],
 });
 
-module.exports = appProd;
+module.exports = oauthProd;

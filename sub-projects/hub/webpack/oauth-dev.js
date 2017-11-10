@@ -2,16 +2,16 @@ const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 const path = require('path');
 
-const base = require('./app-base.js');
+const base = require('./oauth-base.js');
 
-const buildPath = path.resolve(__dirname, '../public/app');
+const buildPath = path.resolve(__dirname, '../public/oauth');
 
-const appDev = webpackMerge(base, {
+const oauthDev = webpackMerge(base, {
   // Enables source maps that can be accessed in browser dev tools
   devtool: 'cheap-module-eval-source-map',
 
   devServer: {
-    port: 8080,
+    port: 8081,
     host: '0.0.0.0',
     contentBase: buildPath,
     inline: true,
@@ -24,4 +24,4 @@ const appDev = webpackMerge(base, {
   ],
 });
 
-module.exports = appDev;
+module.exports = oauthDev;

@@ -11,9 +11,9 @@ node_modules/
 .env
 
 # Webpack bundles
-sub-projects/hub/public/*.map
-sub-projects/hub/public/*.json
-sub-projects/hub/public/*.js
+sub-projects/hub/public/*
+!sub-projects/hub/public/app/index.html
+!sub-projects/hub/public/oauth/index.html
 
 # Generated Documentation
 sub-projects/hub/docs/
