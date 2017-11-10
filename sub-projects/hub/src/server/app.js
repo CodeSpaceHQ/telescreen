@@ -18,15 +18,8 @@ const corsOptions = {};
 
 // NODE_ENV dependent variations
 switch (process.env.NODE_ENV) {
-  case 'production':
-    corsOptions.origin = 'http://127.0.0.1:3000';
-    break;
-  case 'development':
-    corsOptions.origin = 'http://127.0.0.1:8080';
-    corsOptions.credentials = true;
-    break;
   default:
-    corsOptions.origin = 'http://127.0.0.1:3000';
+    corsOptions.origin = '*';
 }
 
 // Express configuration.
