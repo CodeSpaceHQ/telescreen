@@ -1,14 +1,23 @@
 import React from 'react';
+import { HashRouter, Route, Redirect } from 'react-router-dom';
 
-import {
-  Container,
-} from 'semantic-ui-react';
+import Login from './components/Login.jsx';
 
 function App() {
   return (
-    <Container text textAlign='center'>
-      Temp
-    </Container>
+    <HashRouter>
+      <div>
+        <Route
+          exact
+          path='/'
+          render={() => (
+            <Redirect to='/login' />
+          )}
+        />
+
+        <Route path='/login' component={Login} />
+      </div>
+    </HashRouter>
   );
 }
 
