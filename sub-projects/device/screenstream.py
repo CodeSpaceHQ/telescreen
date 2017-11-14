@@ -5,7 +5,7 @@ from threading import Thread, Event
 from time import sleep
 
 
-class PiCameraVideoStream(object):
+class PiCamVideoStream(object):
     """
     A class that handles threaded video streaming through a PiCamera.
     based on imutils library for python: https://github.com/jrosebr1/imutils
@@ -22,10 +22,10 @@ class PiCameraVideoStream(object):
         self.camera = PiCamera()  # get picamera object
         self.camera.resolution = resolution
         self.camera.framerate = framerate
-        self.rawCapture = PiRGBArray(self.camera,
-                                     size=resolution)  # get RGB array from the camera
+        self.raw_capture = PiRGBArray(self.camera,
+                                      size=resolution)  # get RGB array from the camera
         # continuously capture and store as an array in stream
-        self.stream = self.camera.capture_continuous(self.rawCapture,
+        self.stream = self.camera.capture_continuous(self.raw_capture,
                                                      format="bgr",
                                                      use_video_port=True)
 
@@ -48,12 +48,12 @@ class PiCameraVideoStream(object):
         """
         for frame in self.stream:
             self.frame = frame.array
-            self.rawCapture.truncate(0)
+            self.raw_capture.truncate(0)
             event.set()
 
             if self.stopped:
                 self.stream.close()
-                self.rawCapture.close()
+                self.raw_capture.close()
                 self.camera.close()
                 event.clear()
                 return
@@ -152,8 +152,8 @@ class ScreenStream(object):
         self.resolution = resolution
 
         if usePiCamera:  # set up picamera using helper class
-            self.stream = PiCameraVideoStream(resolution=resolution,
-                                              framerate=FPS)
+            self.stream = PiCamVideoStream(resolution=resolution,
+                                           framerate=FPS)
         else:  # set up webcam using helper class
             self.stream = WebCamVideoStream(src=src)
 
