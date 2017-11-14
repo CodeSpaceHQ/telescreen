@@ -1,9 +1,9 @@
 # NOTE: this file must be in the same directory as screenstream.py to run
-from screenstream import ScreenStream
+from screenstream import WebCamStream
 import cv2
 from time import sleep
 
-video_stream = ScreenStream(use_pi_camera=True)
+video_stream = WebCamStream()
 video_stream.start()
 
 face_cascade = cv2.CascadeClassifier("../data/haarcascades/haarcascade_frontalface_default.xml")

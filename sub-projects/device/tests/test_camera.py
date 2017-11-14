@@ -1,9 +1,9 @@
 # NOTE: this file must be in the same directory as screenstream.py to run
-from screenstream import ScreenStream
+from screenstream import WebCamStream
 import cv2
 from time import sleep
 
-video_stream = ScreenStream(use_pi_camera=True)
+video_stream = WebCamStream()
 video_stream.start()
 
 while True:

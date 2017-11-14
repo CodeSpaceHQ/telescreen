@@ -10,7 +10,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 
 
-class WebCamVideoStream(object):
+class WebCamStream(object):
     """
     A class that handles threaded video streaming through a USB webcam.
     based on imutils library for python: https://github.com/jrosebr1/imutils
