@@ -19,18 +19,17 @@ class FacesTracker(object):
         :param frame: 
         :return: the count of faces detected in the frame
         """
-        detected_faces = self.face_cascade.detectMultiSscale(frame, 1.3, 5)
+        detected_faces = self.face_cascade.detectMultiScale(frame, 1.3, 5)
         for (x, y, w, h) in detected_faces:
             # attempt to track the face if it is
             # not already being tracked
             self.track(x, y, w, h, frame)
-
         return len(detected_faces)
 
     def track(self, x, y, w, h, frame):
 
-        x_c = (x * w) / 2  # x-coord of center point
-        y_c = (y * h) / 2  # y-coord of center  point
+        x_c = x + (w / 2)  # x-coord of center point
+        y_c = y + (h / 2)  # y-coord of center  point
 
         matched = False
         i = 0
@@ -39,13 +38,14 @@ class FacesTracker(object):
         # tracking
         while not matched and i < len(self.trackers):
             curr_tracker = self.trackers[i]
+            position = curr_tracker.get_position()
             # coordinates for tracked face `t`
-            x_t = curr_tracker.left()
-            y_t = curr_tracker.top()
-            w_t = curr_tracker.width()
-            h_t = curr_tracker.height()
-            x_t_c = (x_t * w_t) / 2  # x-coord of center point
-            y_t_c = (y_t * h_t) / 2  # y-coord of center point
+            x_t = int(position.left())
+            y_t = int(position.top())
+            w_t = int(position.width())
+            h_t = int(position.height())
+            x_t_c = x_t + (w_t / 2)  # x-coord of center point
+            y_t_c = y_t + (h_t / 2)  # y-coord of center point
 
             x_c_inside_tracked = x_t <= x_c <= x_t + w_t
             y_c_inside_tracked = y_t <= y_c <= y_t + h_t
@@ -63,10 +63,10 @@ class FacesTracker(object):
             new_tracker = dlib.correlation_tracker()
             new_tracker.start_track(frame,
                                     dlib.rectangle(
-                                        x,
-                                        y,
-                                        x + w,
-                                        y + h
+                                        int(x),
+                                        int(y),
+                                        int(x + w),
+                                        int(y + h)
                                     ))
             self.trackers.append(new_tracker)
             self.tracking_count += 1
@@ -75,7 +75,15 @@ class FacesTracker(object):
         self.trackers = [t for t in self.trackers if t.update(frame) >= 7]
 
     def get_coordinates(self):
-        return [(t.left, t.top(), t.left(), t.right())
-                 for t in self.trackers]
-
+        positions = []
+        for t in self.trackers:
+            p = t.get_position()
+            
+            positions.append((int(p.left()),
+                              int(p.top()),
+                              int(p.width()),
+                              int(p.height())
+                              ))
+                             
+        return positions
 
