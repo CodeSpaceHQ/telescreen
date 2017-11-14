@@ -28,7 +28,13 @@ SALT=10
 
 INIT_USERNAME=test@ttu.edu
 INIT_PASSWORD=test
+
+EMAIL_ADDRESS=an.example.email@gmail.com
+EMAIL_PASSWORD=anexamplepassword
 ```
+
+Note: the email address and password will not work.
+You should provide another if you want `nodemailer` to function.
 
 ### Test Changes
 

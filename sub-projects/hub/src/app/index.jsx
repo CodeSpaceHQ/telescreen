@@ -1,7 +1,11 @@
 import React from 'react';
 import { render } from 'react-dom';
 
+import 'semantic-ui-css/semantic.min.css';
+
+import AppConfig from './config.jsx';
+
 render(
-  <h1>Testing</h1>,
+  <AppConfig />,
   document.getElementById('app'),
 );
