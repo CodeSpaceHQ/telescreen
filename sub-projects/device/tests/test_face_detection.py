@@ -18,9 +18,13 @@ while True:
     detector.update(frame)  # update object tracking
     if frame_count == 15:  # detect on every 15th frame
         frame_count = 0
-        if detector.detect(gray) > face_count:
-            # recognize faces
+        new_faces = detector.detect(gray)
+        if new_faces > face_count: 
+            # a new face was detected,
+            # recognize faces and send off to
+            # log
             pass
+        face_count = new_faces
 
     face_coords = detector.get_coordinates()  # get coordinates of tracked faces
 
