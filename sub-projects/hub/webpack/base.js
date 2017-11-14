@@ -25,15 +25,14 @@ const base = {
         loader: 'babel-loader',
       },
       {
+        // 'test' indicates the file type
+        test: /\.css$/,
         /*
-          sass-loader is only used to allow customization of
-          grommet. The two main types of customization are:
-            - Overriding variables
-            - Creating a custom theme
-          We are primarily concerned with the second option as of
-          writing of this documentation.
+          When there are multiple loaders, the ‘loader’ key is replaced by
+          the ‘use’ key. Each member of the ‘use’ array is an object
+          containing the ‘loader’ key and possibly the ‘options’ key. The
+          ‘options’ key is used to specify query parameters.
         */
-        test: /\.scss$/,
         use: [
           {
             loader: 'style-loader',
@@ -41,13 +40,12 @@ const base = {
           {
             loader: 'css-loader',
           },
-          {
-            loader: 'sass-loader',
-            options: {
-              outputStyle: 'compressed',
-              includePaths: [nodePath],
-            },
-          },
+        ],
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        use: [
+          'file-loader',
         ],
       },
     ],
