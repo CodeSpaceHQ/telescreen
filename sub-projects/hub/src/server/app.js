@@ -48,12 +48,12 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   secret: process.env.SECRET,
-  store: new MongoStore({
+  store: process.env.NODE_ENV !== 'testing' ? new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: 60 * 60 * 24 * 14,
     collection: 'sessions',
     stringify: false,
-  }),
+  }) : undefined,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
