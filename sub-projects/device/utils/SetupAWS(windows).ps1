@@ -3,8 +3,3 @@
 &pip install awscli
 
 &aws configure
-
-
-
-
-
