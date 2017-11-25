@@ -128,21 +128,21 @@ async function getClient(clientId) {
   }
 }
 
-async function getUser(username, password) {
+async function getUser(email, password) {
   logger.info('Getting user.');
 
   try {
-    const user = await Admin.findOne({ username }).exec();
+    const user = await Admin.findOne({ email }).exec();
 
     // No user found for the given email address.
     if (!user) {
-      throw new errors.InvalidLoginInfoError();
+      return false;
     }
 
     const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
-      throw new errors.InvalidLoginInfoError();
+      return false;
     }
 
     return user;

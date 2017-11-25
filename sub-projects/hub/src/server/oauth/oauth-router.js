@@ -180,4 +180,53 @@ router.post('/authorize', (request, response) => {
     });
 });
 
+/**
+ * Log the user in on a specific device.
+ * 
+ * #### Request
+ * 
+ * - path: `/api/oauth/token`
+ * - verb: POST
+ * 
+ * ```json
+ * {
+ *   "username": String,
+ *   "password": String,
+ *   "grant_type": "password",
+ *   "client_id": String,
+ * }
+ * ```
+ * 
+ * #### Response
+ * 
+ * Status 200 - Success
+ * 
+ * ```json
+ * {
+ *   "accessToken": String,
+ *   "accessTokenExpiresAt": String,
+ *   "refreshToken": String,
+ *   "refreshTokenExpiresAt": String,
+ *   "client": {
+ *      "id": String
+ *    },
+ *   "user": {}
+ * }
+ * ```
+ * 
+ * Failure
+ * 
+ * ```json
+ * {
+ *   "code": Number,
+ *   "message": String,
+ *   "name": String
+ * }
+ * ```
+ * 
+ * @name login
+ * @func
+ * @memberOf OAuth2Endpoint
+ */
+
 module.exports = { router };
