@@ -66,9 +66,18 @@ async function getRefreshToken(token) {
       .populate('Client')
       .exec();
 
+    if (!refresh) {
+      return false;
+    }
+
     return {
       refreshToken: token,
-      client: refresh.Client,
+      refreshTokenExpiresAt: null,
+      scope: refresh.scope,
+      client: {
+        id: refresh.Client._id.toString(),
+      },
+      user: refresh.user ? refresh.user : {},
     };
   } catch (err) {
     throw err;
@@ -216,7 +225,10 @@ async function revokeToken(token) {
   logger.info('Revoking token.');
 
   try {
-    const refresh = Refresh.findOneAndRemove({ refresh: token.refresh }).exec();
+    const refresh = await Refresh
+      .findOneAndRemove({ refresh: token.refreshToken })
+      .exec();
+
     let output = false;
 
     if (refresh) {
