@@ -9,7 +9,6 @@ const {
   Code,
 } = require('./oauth-models.js');
 const logger = require('utils/logger.js');
-const errors = require('resources/errors.js');
 const userModels = require('users/user-models');
 
 const Admin = userModels.Admin;
@@ -38,20 +37,26 @@ async function getAccessToken(token) {
   logger.info('Getting access token.');
 
   try {
-    let output = false;
     const access = Token
       .findOne({ token })
       .populate('Client')
       .exec();
 
-    if (access) {
-      output = {
-        accessToken: token,
-        client: access.Client,
-      };
+    if (!access) {
+      return false;
     }
 
-    return output;
+    return {
+      accessToken: token,
+      accessTokenExpiresAt: access.expires,
+      scope: access.Client.scope,
+      client: {
+        id: access.Client._id.toString(),
+      },
+      user: access.Client.user ? {
+        email: access.Client.user.email,
+      } : {},
+    };
   } catch (err) {
     throw err;
   }
@@ -73,11 +78,13 @@ async function getRefreshToken(token) {
     return {
       refreshToken: token,
       refreshTokenExpiresAt: null,
-      scope: refresh.scope,
+      scope: refresh.Client.scope,
       client: {
         id: refresh.Client._id.toString(),
       },
-      user: refresh.user ? refresh.user : {},
+      user: refresh.Client.user ? {
+        email: refresh.Client.user.email,
+      } : {},
     };
   } catch (err) {
     throw err;
@@ -88,28 +95,27 @@ async function getAuthorizationCode(code) {
   logger.info('Getting authorization code.');
 
   try {
-    let output;
-
-    const authCode = await Code
+    const auth = await Code
       .findOne({ code })
       .populate('Client')
       .exec();
 
-    if (!authCode) {
-      output = false;
-    } else {
-      output = {
-        code,
-        expiresAt: authCode.expires,
-        client: {
-          id: authCode.Client._id.toString(),
-        },
-        redirectUri: authCode.Client.redirectURL,
-        user: {},
-      };
+    if (!auth) {
+      return false;
     }
 
-    return output;
+    return {
+      code,
+      expiresAt: auth.expires,
+      redirectUri: auth.Client.redirectURL,
+      scope: auth.Client.scope,
+      client: {
+        id: auth.Client._id.toString(),
+      },
+      user: auth.Client.user ? {
+        email: auth.Client.user.email,
+      } : {},
+    };
   } catch (err) {
     throw err;
   }
@@ -124,7 +130,7 @@ async function getClient(clientId) {
       .exec();
 
     if (!client) {
-      throw new errors.ClientNotFoundError();
+      return false;
     }
 
     return {
@@ -154,13 +160,15 @@ async function getUser(email, password) {
       return false;
     }
 
-    return user;
+    return {
+      email: user.email,
+    };
   } catch (err) {
     throw err;
   }
 }
 
-async function saveToken(token, client) {
+async function saveToken(token, client, user) {
   logger.info('Saving token.');
 
   try {
@@ -169,9 +177,9 @@ async function saveToken(token, client) {
       expires: token.accessTokenExpiresAt,
       Client: mongoose.Types.ObjectId(client.id),
     }).save();
-    let refreshPromise;
+
     if (token.refreshToken) {
-      refreshPromise = new Refresh({
+      await new Refresh({
         refresh: token.refreshToken,
         expires: token.refreshTokenExpiresAt,
         Client: mongoose.Types.ObjectId(client.id),
@@ -179,42 +187,34 @@ async function saveToken(token, client) {
     }
 
     await tokenPromise;
-    if (token.refreshToken) {
-      await refreshPromise;
-    }
 
     return {
       accessToken: token.accessToken,
       accessTokenExpiresAt: token.accessTokenExpiresAt,
       refreshToken: token.refreshToken,
       refreshTokenExpiresAt: token.refreshTokenExpiresAt,
-      client: {
-        id: client.id,
-      },
-      user: {},
+      client,
+      user,
     };
   } catch (err) {
     throw err;
   }
 }
 
-async function saveAuthorizationCode(code, client) {
+async function saveAuthorizationCode(code, client, user) {
   logger.info('Saving auth code.');
 
   try {
-    const codePromise = new Code({
+    await new Code({
       code: code.authorizationCode,
       expires: code.expiresAt,
       Client: mongoose.Types.ObjectId(client.id),
     }).save();
 
-    await codePromise;
-
     return {
       ...code,
-      client: {
-        id: client.id,
-      },
+      client,
+      user,
     };
   } catch (err) {
     throw err;
@@ -229,13 +229,11 @@ async function revokeToken(token) {
       .findOneAndRemove({ refresh: token.refreshToken })
       .exec();
 
-    let output = false;
-
-    if (refresh) {
-      output = true;
+    if (!refresh) {
+      return false;
     }
 
-    return output;
+    return true;
   } catch (err) {
     throw err;
   }
@@ -245,14 +243,15 @@ async function revokeAuthorizationCode(code) {
   logger.info('Revoking authorization code.');
 
   try {
-    const authCode = Code.findOneAndRemove({ code: code.code }).exec();
-    let output = false;
+    const auth = Code
+      .findOneAndRemove({ code: code.code })
+      .exec();
 
-    if (authCode) {
-      output = true;
+    if (!auth) {
+      return false;
     }
 
-    return output;
+    return true;
   } catch (err) {
     throw err;
   }
