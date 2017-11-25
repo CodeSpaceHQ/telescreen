@@ -53,9 +53,7 @@ async function getAccessToken(token) {
       client: {
         id: access.Client._id.toString(),
       },
-      user: access.Client.user ? {
-        email: access.Client.user.email,
-      } : {},
+      user: access.Client.user ? access.Client.user : {},
     };
   } catch (err) {
     throw err;
@@ -82,9 +80,7 @@ async function getRefreshToken(token) {
       client: {
         id: refresh.Client._id.toString(),
       },
-      user: refresh.Client.user ? {
-        email: refresh.Client.user.email,
-      } : {},
+      user: refresh.Client.user ? refresh.Client.user : {},
     };
   } catch (err) {
     throw err;
@@ -112,9 +108,7 @@ async function getAuthorizationCode(code) {
       client: {
         id: auth.Client._id.toString(),
       },
-      user: auth.Client.user ? {
-        email: auth.Client.user.email,
-      } : {},
+      user: auth.Client.user ? auth.Client.user : {},
     };
   } catch (err) {
     throw err;
@@ -160,9 +154,7 @@ async function getUser(email, password) {
       return false;
     }
 
-    return {
-      email: user.email,
-    };
+    return user;
   } catch (err) {
     throw err;
   }
@@ -188,13 +180,16 @@ async function saveToken(token, client, user) {
 
     await tokenPromise;
 
+    // `user` comes from various `get` methods in the OAuth server model.
     return {
       accessToken: token.accessToken,
       accessTokenExpiresAt: token.accessTokenExpiresAt,
       refreshToken: token.refreshToken,
       refreshTokenExpiresAt: token.refreshTokenExpiresAt,
       client,
-      user,
+      user: {
+        email: user.email,
+      },
     };
   } catch (err) {
     throw err;
@@ -211,10 +206,13 @@ async function saveAuthorizationCode(code, client, user) {
       Client: mongoose.Types.ObjectId(client.id),
     }).save();
 
+    // `user` comes from the authentication handler.
     return {
       ...code,
       client,
-      user,
+      user: {
+        email: user.email,
+      },
     };
   } catch (err) {
     throw err;
