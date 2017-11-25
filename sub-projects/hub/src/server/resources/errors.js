@@ -21,5 +21,7 @@ module.exports = {
   InvalidLoginInfoError,
   InvalidSessionError,
   ExistingAccountError,
+  ExistingPersonNameError,
+  ExistingPersonFileRefError,
   MissingParametersError,
 };
