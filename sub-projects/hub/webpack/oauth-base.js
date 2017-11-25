@@ -3,8 +3,9 @@ const webpackMerge = require('webpack-merge');
 
 const base = require('./base.js');
 
-const nodePath = path.resolve(__dirname, '../node_modules');
 const appPath = path.resolve(__dirname, '../src/oauth');
+const commonPath = path.resolve(__dirname, '../src/common');
+const nodePath = path.resolve(__dirname, '../node_modules');
 const buildPath = path.resolve(__dirname, '../public/oauth');
 
 const oauthBase = webpackMerge(base, {
@@ -12,6 +13,7 @@ const oauthBase = webpackMerge(base, {
   resolve: {
     modules: [
       appPath,
+      commonPath,
       nodePath,
     ],
   },

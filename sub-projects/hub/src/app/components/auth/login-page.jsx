@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 import logger from 'utils/logger';
+import * as server from 'server';
 
 import {
   Button,
@@ -35,10 +36,7 @@ export default class LoginPage extends React.Component {
   }
 
   handleSubmit() {
-    axios.post('http://127.0.0.1:3000/api/auth', {
-      email: this.state.email,
-      password: this.state.password,
-    })
+    server.login(this.state.email, this.state.password)
       .then(() => {
         this.setState({ redirectToHome: true });
       })

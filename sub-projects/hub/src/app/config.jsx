@@ -1,11 +1,9 @@
 import React from 'react';
 import { HashRouter, Route, Redirect } from 'react-router-dom';
-import axios from 'axios';
 
 import LoginPage from './components/auth/login-page.jsx';
 import AddAdmin from './components/admin/add-admin.jsx';
-
-axios.defaults.withCredentials = true;
+import MapView from './components/map/map-view.jsx';
 
 const AppConfig = () => (
   <HashRouter>
@@ -19,6 +17,7 @@ const AppConfig = () => (
       />
       <Route path='/auth' component={LoginPage} />
       <Route path='/add-admin' component={AddAdmin} />
+      <Route path='/map' component={MapView} />
     </div>
   </HashRouter>
 );
