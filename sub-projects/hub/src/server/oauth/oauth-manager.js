@@ -10,6 +10,9 @@ const {
 } = require('./oauth-models.js');
 const logger = require('utils/logger.js');
 const errors = require('resources/errors.js');
+const userModels = require('users/user-models');
+
+const Admin = userModels.Admin;
 
 // OAuth2 Server Model
 
@@ -120,6 +123,29 @@ async function getClient(clientId) {
       redirectUris: [client.redirectURL],
       grants: ['authorization_code', 'password', 'refresh_token'],
     };
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getUser(username, password) {
+  logger.info('Getting user.');
+
+  try {
+    const user = await Admin.findOne({ username }).exec();
+
+    // No user found for the given email address.
+    if (!user) {
+      throw new errors.InvalidLoginInfoError();
+    }
+
+    const isMatch = await user.comparePassword(password);
+
+    if (!isMatch) {
+      throw new errors.InvalidLoginInfoError();
+    }
+
+    return user;
   } catch (err) {
     throw err;
   }
@@ -246,6 +272,7 @@ module.exports = {
     getRefreshToken,
     getAuthorizationCode,
     getClient,
+    getUser,
     saveToken,
     saveAuthorizationCode,
     revokeToken,
