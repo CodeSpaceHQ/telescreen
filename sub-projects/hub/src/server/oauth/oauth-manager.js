@@ -37,7 +37,7 @@ async function getAccessToken(token) {
   logger.info('Getting access token.');
 
   try {
-    const access = Token
+    const access = await Token
       .findOne({ token })
       .populate('Client')
       .exec();
@@ -186,7 +186,9 @@ async function saveToken(token, client, user) {
       accessTokenExpiresAt: token.accessTokenExpiresAt,
       refreshToken: token.refreshToken,
       refreshTokenExpiresAt: token.refreshTokenExpiresAt,
-      client,
+      client: {
+        id: client.id,
+      },
       user: {
         email: user.email,
       },
@@ -209,7 +211,9 @@ async function saveAuthorizationCode(code, client, user) {
     // `user` comes from the authentication handler.
     return {
       ...code,
-      client,
+      client: {
+        id: client.id,
+      },
       user: {
         email: user.email,
       },

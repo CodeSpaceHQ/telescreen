@@ -120,7 +120,9 @@ router.post('/client', (req, res) => {
  *   "client": {
  *      "id": String
  *    },
- *   "user": {}
+ *   "user": {
+ *     "email": String
+ *   }
  * }
  * ```
  * 
@@ -167,9 +169,10 @@ router.post('/token', (request, response) => {
  * 
  * ```json
  * {
- *   "client_id": String,
+ *   "access_token": String,
  *   "state": String,
- *   "response_type": String
+ *   "response_type": String,
+ *   "client_id": String
  * }
  * ```
  * 
@@ -184,6 +187,9 @@ router.post('/token', (request, response) => {
  *   "redirectUri": String,
  *   "client": {
  *     "id": String
+ *   },
+ *   "user": {
+ *     "email": String
  *   }
  * }
  * ```
@@ -196,16 +202,12 @@ router.post('/authorize', (request, response) => {
   const req = new Request(request);
   const res = new Response(response);
 
-  oauth.authorize(req, res, {
-    authenticateHandler: {
-      handle: rq => rq.user,
-    },
-  })
+  oauth.authorize(req, res)
     .then((code) => {
       response.status(200).json(code).end();
     })
     .catch((err) => {
-      response.status(400).json({ message: err.message }).end();
+      response.status(400).json(err).end();
     });
 });
 
