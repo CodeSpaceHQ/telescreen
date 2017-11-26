@@ -166,6 +166,7 @@ router.post('/token', (request, response) => {
  * 
  * - path: `/api/oauth/authorize`
  * - verb: POST
+ * - Content-Type: `application/x-www-form-urlencoded`
  * 
  * ```json
  * {
@@ -202,6 +203,7 @@ router.post('/authorize', (request, response) => {
   const req = new Request(request);
   const res = new Response(response);
 
+  // Doesn't need an authenticate handler if you pass an access token.
   oauth.authorize(req, res)
     .then((code) => {
       response.status(200).json(code).end();
