@@ -264,16 +264,20 @@ async function revokeAuthorizationCode(code) {
 
 // Other functionality
 
-async function createClient(redirectURL, name) {
+async function createClient(options) {
   logger.info('Creating client.');
 
   try {
+    const id = await Client.genId();
+
     const client = await new Client({
-      redirectURL,
-      name,
+      id,
+      redirectURL: options.redirectURL,
+      email: options.email,
+      name: options.name,
     }).save();
 
-    return client._id;
+    return client._id.toString();
   } catch (err) {
     throw err;
   }

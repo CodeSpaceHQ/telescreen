@@ -24,6 +24,7 @@ const router = express.Router();
  * ```json
  * {
  *   "redirectURL": String,
+ *   "email": String,
  *   "name": String
  * }
  * ```
@@ -51,7 +52,7 @@ const router = express.Router();
  * @memberOf OAuth2Endpoint
  */
 router.post('/client', (req, res) => {
-  oauthManager.createClient(req.body.redirectURL, req.body.name)
+  oauthManager.createClient(req.body)
     .then((clientId) => {
       res.status(200).json({ clientId }).end();
     })

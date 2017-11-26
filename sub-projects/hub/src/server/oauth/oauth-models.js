@@ -32,18 +32,26 @@ async function genUnique(len) {
 // Client
 
 const clientSchema = new mongoose.Schema({
+  id: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   redirectURL: {
     type: String,
     required: true,
   },
-  User: {
-    type: Schema.Types.ObjectId,
-    ref: 'Admin',
+  email: {
+    type: String,
   },
   name: {
     type: String,
   },
 });
+
+clientSchema.statics.genId = async function genId() {
+  return genUnique.bind(this)(25);
+};
 
 // Refresh Token
 
