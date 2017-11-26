@@ -74,6 +74,7 @@ async function getRefreshToken(token) {
       return false;
     }
 
+    // `refreshTokenExpiresAt: null` results in a non-expiring token.
     return {
       refreshToken: token,
       refreshTokenExpiresAt: null,
@@ -293,6 +294,12 @@ module.exports = {
       revokeToken,
       revokeAuthorizationCode,
     },
+    requireClientAuthentication: {
+      authorization_code: false,
+      refresh_token: false,
+      password: false,
+    },
+    alwaysIssueNewRefreshToken: false,
   }),
   createClient,
 };

@@ -65,7 +65,7 @@ router.post('/client', (req, res) => {
  * 
  * 1. Exchange a code for tokens.
  * 2. Exchange username and password for tokens.
- * 3. Exchange a refresh token for new tokens when access token expires.
+ * 3. Exchange a refresh token for a new access token.
  * 
  * #### Request
  * 
@@ -142,13 +142,7 @@ router.post('/token', (request, response) => {
   const req = new Request(request);
   const res = new Response(response);
 
-  oauth.token(req, res, {
-    requireClientAuthentication: {
-      authorization_code: false,
-      refresh_token: false,
-      password: false,
-    },
-  })
+  oauth.token(req, res)
     .then((token) => {
       response.status(200).json(token).end();
     })
