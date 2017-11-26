@@ -6,6 +6,7 @@ class OAuthManager {
     this.accessKey = 'access';
     this.accessExpiresKey = 'accessExpires';
     this.clientIDKey = 'clientID';
+    this.clientRedirectKey = 'clientRedirect';
   }
 
   async refreshToken() {
@@ -29,28 +30,9 @@ class OAuthManager {
     };
   }
 
-  async createClient(options) {
-    const res = await new Connection()
-      .post()
-      .oauth()
-      .client()
-      .data({
-        redirectURL: options.redirectURL,
-        email: options.email,
-        name: options.name,
-      })
-      .call();
-
-    this.setClientID(res.clientId);
-
-    return {
-      clientID: res.clientId,
-    };
-  }
-
   async confirmAccess() {
     if (new Date() > new Date(this.getAccessExpires())) {
-      await this.refreshToken;
+      await this.refreshToken();
     }
   }
 
@@ -84,6 +66,14 @@ class OAuthManager {
 
   setClientID(clientID) {
     localStorage.setItem(this.clientIDKey, clientID);
+  }
+
+  getClientRedirect() {
+    return localStorage.getItem(this.clientRedirectKey);
+  }
+
+  setClientRedirect(clientRedirect) {
+    localStorage.setItem(this.clientRedirectKey, clientRedirect);
   }
 }
 
