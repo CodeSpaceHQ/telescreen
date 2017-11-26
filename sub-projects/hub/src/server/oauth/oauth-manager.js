@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 
 const mongoose = require('mongoose');
+const OAuth2Server = require('oauth2-server');
 
 const {
   Client,
@@ -277,19 +278,21 @@ async function createClient(redirectURL, name) {
 }
 
 module.exports = {
-  model: {
-    generateAccessToken,
-    generateRefreshToken,
-    generateAuthorizationCode,
-    getAccessToken,
-    getRefreshToken,
-    getAuthorizationCode,
-    getClient,
-    getUser,
-    saveToken,
-    saveAuthorizationCode,
-    revokeToken,
-    revokeAuthorizationCode,
-  },
+  server: new OAuth2Server({
+    model: {
+      generateAccessToken,
+      generateRefreshToken,
+      generateAuthorizationCode,
+      getAccessToken,
+      getRefreshToken,
+      getAuthorizationCode,
+      getClient,
+      getUser,
+      saveToken,
+      saveAuthorizationCode,
+      revokeToken,
+      revokeAuthorizationCode,
+    },
+  }),
   createClient,
 };

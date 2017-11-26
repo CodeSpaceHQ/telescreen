@@ -3,9 +3,7 @@ const OAuthServer = require('oauth2-server');
 
 const oauthManager = require('./oauth-manager.js');
 
-const oauth = new OAuthServer({
-  model: oauthManager.model,
-});
+const oauth = oauthManager.server;
 
 const Request = OAuthServer.Request;
 const Response = OAuthServer.Response;
