@@ -7,6 +7,7 @@ class OAuthManager {
     this.accessExpiresKey = 'accessExpires';
     this.clientIDKey = 'clientID';
     this.clientRedirectKey = 'clientRedirect';
+    this.stateKey = 'state';
   }
 
   async refreshToken() {
@@ -74,6 +75,14 @@ class OAuthManager {
 
   setClientRedirect(clientRedirect) {
     localStorage.setItem(this.clientRedirectKey, clientRedirect);
+  }
+
+  getState() {
+    return localStorage.getItem(this.stateKey);
+  }
+
+  setState(state) {
+    localStorage.setItem(this.stateKey, state);
   }
 }
 
