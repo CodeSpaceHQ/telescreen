@@ -3,6 +3,8 @@
 const mongoose = require('mongoose');
 const OAuth2Server = require('oauth2-server');
 
+const values = require('resources/values.js');
+
 const {
   Client,
   Token,
@@ -175,7 +177,6 @@ async function saveToken(token, client, user) {
     if (token.refreshToken) {
       await new Refresh({
         refresh: token.refreshToken,
-        expires: token.refreshTokenExpiresAt,
         Client: mongoose.Types.ObjectId(client.id),
       }).save();
     }
@@ -299,6 +300,9 @@ module.exports = {
       refresh_token: false,
       password: false,
     },
+    refreshTokenLifetime: values.refreshTokenLifetime,
+    accessTokenLifetime: values.accessTokenLifetime,
+    authorizationCodeLifetime: values.authorizationCodeLifetime,
     alwaysIssueNewRefreshToken: false,
   }),
   createClient,

@@ -36,9 +36,12 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  User: {
+    type: Schema.Types.ObjectId,
+    ref: 'Admin',
+  },
   name: {
     type: String,
-    required: true,
   },
 });
 
@@ -53,6 +56,7 @@ const refreshSchema = new mongoose.Schema({
   Client: {
     type: Schema.Types.ObjectId,
     ref: 'Client',
+    required: true,
   },
 });
 
@@ -68,6 +72,11 @@ const tokenSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: values.authorizationCodeLifetime,
+  },
   expires: {
     type: Date,
     required: true,
@@ -75,6 +84,7 @@ const tokenSchema = new mongoose.Schema({
   Client: {
     type: Schema.Types.ObjectId,
     ref: 'Client',
+    required: true,
   },
 });
 
@@ -90,6 +100,11 @@ const codeSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: values.authorizationCodeLifetime,
+  },
   expires: {
     type: Date,
     required: true,
@@ -97,6 +112,7 @@ const codeSchema = new mongoose.Schema({
   Client: {
     type: Schema.Types.ObjectId,
     ref: 'Client',
+    required: true,
   },
 });
 
