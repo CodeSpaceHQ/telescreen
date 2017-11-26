@@ -1,28 +1,27 @@
 import Connection from './connection.js';
+import OAuthManager from './oauth-manager.js';
 
-export function login(email, password) {
-  return new Promise((resolve, reject) => {
-    const onSuccess = (res) => {
-      resolve(res.user);
-    };
+/* eslint-disable import/prefer-default-export */
+export async function login(email, password) {
+  const res = await new Connection()
+    .post()
+    .oauth()
+    .token()
+    .data({
+      username: email,
+      password,
+      grant_type: 'password',
+      client_id: OAuthManager.getClientID(),
+    })
+    .call();
 
-    new Connection()
-      .post()
-      .auth()
-      .data({ email, password })
-      .call(onSuccess, reject);
-  });
-}
+  OAuthManager.setAccess(res.accessToken);
+  OAuthManager.setAccessExpires(res.accessTokenExpiresAt);
+  OAuthManager.setRefresh(res.refreshToken);
 
-export function logout() {
-  return new Promise((resolve, reject) => {
-    const onSuccess = () => {
-      resolve();
-    };
-
-    new Connection()
-      .del()
-      .auth()
-      .call(onSuccess, reject);
-  });
+  return {
+    access: res.accessToken,
+    accessExpires: res.accessTokenExpiresAt,
+    refresh: res.refreshToken,
+  };
 }
