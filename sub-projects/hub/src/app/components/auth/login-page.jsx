@@ -50,7 +50,7 @@ export default class LoginPage extends React.Component {
   render() {
     if (this.state.redirectToHome) {
       return (
-        <Redirect to={{ pathname: '/add-admin' }} />
+        <Redirect to={{ pathname: '/home-page' }} />
         // CHANGE TO HOME PATHNAME WHEN WE MAKE IT
       );
     }
