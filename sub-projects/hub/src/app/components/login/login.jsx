@@ -46,6 +46,12 @@ class Login extends React.Component {
       await server.login(this.state.email, this.state.password);
 
       if (this.params.response_type === 'code') {
+        /*
+          Note: this will prevent tokens from being refreshed on the hub
+          website, since this is the device client_id. Basically, the hub
+          client_id is overwritten. Consider adding separate storage
+          locations.
+        */
         OAuthManager.setClientID(this.params.client_id);
         OAuthManager.setClientRedirect(this.params.redirect_uri);
         OAuthManager.setState(this.params.state);
