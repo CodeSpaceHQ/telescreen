@@ -17,3 +17,6 @@ sub-projects/hub/public/*.js
 
 # Generated Documentation
 sub-projects/hub/docs/
+package.json
+yarn.lock
+sub-projects/device/utils/__pycache__/compare.cpython-36.pyc
