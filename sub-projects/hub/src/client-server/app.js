@@ -3,10 +3,8 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const apiRouter = require('./router.js');
-
 // Declarations/Definitions
-const port = process.env.PORT || 3000;
+const port = 3000;
 const app = express();
 const format = ':method :url :status :response-time ms - :res[content-length]';
 const corsOptions = {};
@@ -25,11 +23,9 @@ app.use(morgan(format, {
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// TODO(NilsG-S): set up https for production
 
 // Routes.
-app.use('/', express.static(`${__dirname}/../../public/app`));
-app.use('/api', apiRouter);
+app.use('/', express.static(`${__dirname}/../../public/client`));
 
 // 404.
 app.use((req, res, next) => {
