@@ -1,13 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
 
-const strings = require('./resources/strings.js');
-const passport = require('./passport-config.js');
 const apiRouter = require('./router.js');
 
 // Declarations/Definitions
@@ -31,25 +26,6 @@ app.use(morgan(format, {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // TODO(NilsG-S): setup https for production
-app.use(session({
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 14,
-    secure: process.env.NODE_ENV === 'production',
-  },
-  name: strings.cookieName,
-  resave: false,
-  saveUninitialized: false,
-  secret: process.env.SECRET,
-  store: process.env.NODE_ENV !== 'testing' ? new MongoStore({
-    mongooseConnection: mongoose.connection,
-    ttl: 60 * 60 * 24 * 14,
-    collection: 'sessions',
-    stringify: false,
-  }) : undefined,
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Routes.
 app.use('/', express.static(`${__dirname}/../../public/app`));
