@@ -8,7 +8,7 @@ export async function authorize(state) {
     .post()
     .oauth()
     .authorize()
-    .data({
+    .params({
       access_token: OAuthManager.getAccess(),
       state,
       response_type: 'code',
@@ -27,7 +27,7 @@ export async function token(code) {
     .post()
     .oauth()
     .token()
-    .data({
+    .params({
       code,
       grant_type: 'authorization_code',
       client_id: OAuthManager.getClientID(),

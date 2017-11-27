@@ -3,11 +3,21 @@ import OAuthManager from './oauth-manager.js';
 
 /* eslint-disable import/prefer-default-export */
 export async function login(email, password) {
+  if (OAuthManager.getRefresh()) {
+    await OAuthManager.confirmAccess();
+
+    return {
+      access: OAuthManager.getAccess(),
+      accessExpires: OAuthManager.getAccessExpires(),
+      refresh: OAuthManager.getRefresh(),
+    };
+  }
+
   const res = await new Connection()
     .post()
     .oauth()
     .token()
-    .data({
+    .params({
       username: email,
       password,
       grant_type: 'password',
