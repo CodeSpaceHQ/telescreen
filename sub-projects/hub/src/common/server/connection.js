@@ -9,9 +9,10 @@ import axios from 'axios';
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:3000/api',
   timeout: 5000,
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
 });
-
-instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 /**
  * This class allows for easy building of a request to the API.
@@ -31,7 +32,6 @@ export default class Connection {
   constructor() {
     this.config = {
       data: {},
-      params: {},
     };
 
     this.url = '/';
@@ -91,9 +91,13 @@ export default class Connection {
    * @returns {Connection}
    */
   params(query) {
+    const params = new URLSearchParams();
+
     Object.keys(query).forEach((key) => {
-      this.config.params[key] = query[key];
+      params.append(key, query[key]);
     });
+
+    this.config.data = params.toString();
     return this;
   }
 

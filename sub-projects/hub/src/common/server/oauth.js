@@ -47,22 +47,29 @@ export async function token(code) {
 }
 
 export async function createClient(options) {
+  if (OAuthManager.getClientID() && OAuthManager.getClientRedirect()) {
+    return {
+      clientID: OAuthManager.getClientID(),
+      clientRedirect: OAuthManager.getClientRedirect(),
+    };
+  }
+
   const res = await new Connection()
     .post()
     .oauth()
     .client()
-    .data({
+    .params({
       redirectURL: options.redirectURL,
       email: options.email,
       name: options.name,
     })
     .call();
 
-  OAuthManager.setClientID(res.clientId);
+  OAuthManager.setClientID(res.data.clientId);
   OAuthManager.setClientRedirect(options.redirectURL);
 
   return {
-    clientID: res.clientId,
-    ClientRedirect: options.redirectURL,
+    clientID: res.data.clientId,
+    clientRedirect: options.redirectURL,
   };
 }
