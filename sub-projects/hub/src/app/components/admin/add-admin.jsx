@@ -12,9 +12,6 @@ import {
   Segment,
 } from 'semantic-ui-react';
 
-import '../app.css';
-
-
 class AddAdmin extends React.Component {
   constructor(props) {
     super(props);
