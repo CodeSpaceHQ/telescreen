@@ -12,6 +12,7 @@ export default class HomePage extends React.Component {
       navigatetoAddPOI: false,
     };
   }
+
   render() {
     if (this.state.navigateToAddAdmin) {
       return <Redirect to='/add-admin' />;
