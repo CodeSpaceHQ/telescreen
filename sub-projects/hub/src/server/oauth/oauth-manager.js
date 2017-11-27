@@ -56,7 +56,9 @@ async function getAccessToken(token) {
       client: {
         id: access.Client._id.toString(),
       },
-      user: access.Client.user ? access.Client.user : {},
+      user: access.Client.email ? {
+        email: access.Client.email,
+      } : {},
     };
   } catch (err) {
     throw err;
@@ -84,7 +86,9 @@ async function getRefreshToken(token) {
       client: {
         id: refresh.Client._id.toString(),
       },
-      user: refresh.Client.user ? refresh.Client.user : {},
+      user: refresh.Client.email ? {
+        email: refresh.Client.email,
+      } : {},
     };
   } catch (err) {
     throw err;
@@ -112,7 +116,9 @@ async function getAuthorizationCode(code) {
       client: {
         id: auth.Client._id.toString(),
       },
-      user: auth.Client.user ? auth.Client.user : {},
+      user: auth.Client.email ? {
+        email: auth.Client.email,
+      } : {},
     };
   } catch (err) {
     throw err;
