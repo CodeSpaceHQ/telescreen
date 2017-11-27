@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 import logger from 'utils/logger.js';
 import * as server from 'server';
 import * as locationUtils from 'utils/location.js';
+import OAuthManager from 'server/oauth-manager.js';
 
 import {
   Button,
@@ -20,6 +22,9 @@ class Login extends React.Component {
       email: '',
       password: '',
     };
+    this.params = locationUtils.getURLParams();
+
+    locationUtils.removeURLParams();
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,28 +37,18 @@ class Login extends React.Component {
   }
 
   async handleSubmit() {
-    const params = locationUtils.getURLParams();
-    locationUtils.removeURLParams();
-
     try {
       await server.createClient({
-        redirectURL: params.redirect_uri,
+        redirectURL: this.params.redirect_uri,
         email: this.state.email,
       });
 
       await server.login(this.state.email, this.state.password);
 
-      if (params.state) {
+      if (this.params.response_type === 'code') {
         this.props.history.push('/permission');
-
-        // const resCode = await server.authorize(params.state);
-
-        // locationUtils.navigate(params.redirect_uri, {
-        //   state: params.state,
-        //   code: resCode.code,
-        // });
       } else {
-        locationUtils.navigate(params.redirect_uri);
+        locationUtils.navigate(this.params.redirect_uri);
       }
     } catch (err) {
       logger.error(err);
@@ -61,6 +56,20 @@ class Login extends React.Component {
   }
 
   render() {
+    if (!this.params.redirect_uri) {
+      logger.error('Need to pass `redirect_uri` as parameter to login page.');
+      return null;
+    }
+
+    if (OAuthManager.getRefresh() && this.params.response_type === 'code') {
+      return <Redirect to='/permission' />;
+    }
+
+    if (OAuthManager.getRefresh()) {
+      locationUtils.navigate(this.params.redirect_uri);
+      return null;
+    }
+
     return (
       <div className='login'>
         <Header
