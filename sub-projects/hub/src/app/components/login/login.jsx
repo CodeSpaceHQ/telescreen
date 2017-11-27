@@ -23,7 +23,6 @@ class Login extends React.Component {
       password: '',
     };
     this.params = locationUtils.getURLParams();
-    OAuthManager.setState(this.params.state);
 
     locationUtils.removeURLParams();
 
@@ -40,16 +39,20 @@ class Login extends React.Component {
   async handleSubmit() {
     try {
       await server.createClient({
-        redirectURL: this.params.redirect_uri,
+        redirectURL: window.location.origin,
         email: this.state.email,
       });
 
       await server.login(this.state.email, this.state.password);
 
       if (this.params.response_type === 'code') {
+        OAuthManager.setClientID(this.params.client_id);
+        OAuthManager.setClientRedirect(this.params.redirect_uri);
+        OAuthManager.setState(this.params.state);
+
         this.props.history.push('/permission');
       } else {
-        locationUtils.navigate(this.params.redirect_uri);
+        this.props.history.push('/add-admin');
       }
     } catch (err) {
       logger.error(err);
@@ -57,18 +60,12 @@ class Login extends React.Component {
   }
 
   render() {
-    if (!this.params.redirect_uri) {
-      logger.error('Need to pass `redirect_uri` as parameter to login page.');
-      return null;
-    }
-
     if (OAuthManager.getRefresh() && this.params.response_type === 'code') {
       return <Redirect to='/permission' />;
     }
 
     if (OAuthManager.getRefresh()) {
-      locationUtils.navigate(this.params.redirect_uri);
-      return null;
+      return <Redirect to='/add-admin' />;
     }
 
     return (
