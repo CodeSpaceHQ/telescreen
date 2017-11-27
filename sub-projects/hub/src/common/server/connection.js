@@ -104,6 +104,6 @@ export default class Connection {
     this.config.method = this.method;
     this.config.url = this.url;
 
-    return instance(this.config);
+    return instance(this.config).then(res => res.data);
   }
 }

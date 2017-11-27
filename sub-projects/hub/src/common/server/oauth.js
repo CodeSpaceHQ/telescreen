@@ -65,11 +65,11 @@ export async function createClient(options) {
     })
     .call();
 
-  OAuthManager.setClientID(res.data.clientId);
+  OAuthManager.setClientID(res.clientId);
   OAuthManager.setClientRedirect(options.redirectURL);
 
   return {
-    clientID: res.data.clientId,
+    clientID: res.clientId,
     clientRedirect: options.redirectURL,
   };
 }
