@@ -34,11 +34,9 @@ class Rekgoniton(object):
 			if response['FaceMatches'] != []:
 				name = self.image_list[i]
 				name = name.strip('.jpg')
-				print('Face match found with '+name)
+				return True, name
 
 			elif response['FaceMatches'] == []:
-				name = self.image_list[i]
-				name = name.strip('.jpg')
-				print('No face match with '+ name)
+				return False, ''
 
 			i += 1
