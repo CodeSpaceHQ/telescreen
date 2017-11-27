@@ -1,15 +1,11 @@
 export function navigate(location, params = []) {
-  let url = location;
+  const URLParams = new URLSearchParams();
 
-  if (params.length > 0) {
-    url += '?';
+  Object.keys(params).forEach((key) => {
+    URLParams.append(key, params[key]);
+  });
 
-    params.forEach((param) => {
-      url += `/${param}`;
-    });
-  }
-
-  window.location = url;
+  window.location = `${location}?${URLParams.toString()}`;
 }
 
 export function removeURLParams() {

@@ -23,6 +23,7 @@ class Login extends React.Component {
       password: '',
     };
     this.params = locationUtils.getURLParams();
+    OAuthManager.setState(this.params.state);
 
     locationUtils.removeURLParams();
 
@@ -71,7 +72,7 @@ class Login extends React.Component {
     }
 
     return (
-      <div className='login'>
+      <div className='centered'>
         <Header
           as='h2'
           color='blue'

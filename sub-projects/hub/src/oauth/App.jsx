@@ -2,6 +2,7 @@ import React from 'react';
 import { HashRouter, Route, Redirect } from 'react-router-dom';
 
 import Login from './components/Login.jsx';
+import Permission from './components/Permission.jsx';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         />
 
         <Route path='/login' component={Login} />
+        <Route path='/permission' component={Permission} />
       </div>
     </HashRouter>
   );
