@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+
+import logger from 'utils/logger.js';
+import * as server from 'server';
+import * as locationUtils from 'utils/location.js';
 
 import {
   Button,
@@ -28,17 +31,33 @@ class Login extends React.Component {
     });
   }
 
-  handleSubmit() {
-    axios.post('http://127.0.0.1:3000/api/auth', {
-      email: this.state.email,
-      password: this.state.password,
-    })
-      .then(() => {
-        this.props.history.push('/add-admin');
-      })
-      .catch((error) => {
-        console.log(error);
+  async handleSubmit() {
+    const params = locationUtils.getURLParams();
+    locationUtils.removeURLParams();
+
+    try {
+      await server.createClient({
+        redirectURL: params.redirect_uri,
+        email: this.state.email,
       });
+
+      await server.login(this.state.email, this.state.password);
+
+      if (params.state) {
+        this.props.history.push('/permission');
+
+        // const resCode = await server.authorize(params.state);
+
+        // locationUtils.navigate(params.redirect_uri, {
+        //   state: params.state,
+        //   code: resCode.code,
+        // });
+      } else {
+        locationUtils.navigate(params.redirect_uri);
+      }
+    } catch (err) {
+      logger.error(err);
+    }
   }
 
   render() {

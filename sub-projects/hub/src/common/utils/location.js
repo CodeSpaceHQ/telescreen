@@ -1,4 +1,4 @@
-export function navigate(location, params) {
+export function navigate(location, params = []) {
   let url = location;
 
   if (params.length > 0) {
@@ -13,11 +13,18 @@ export function navigate(location, params) {
 }
 
 export function removeURLParams() {
-  window.history.pushState({}, document.location.origin, document.location.pathname);
+  const url = new URL(window.location);
+
+  window.history.pushState({}, '', url.toString().replace(/\?.*#/, '#'));
 }
 
 export function getURLParams() {
   const url = new URL(window.location);
+  const params = {};
 
-  return [...url.searchParams.entries()];
+  [...url.searchParams.entries()].forEach((param) => {
+    params[param[0]] = param[1];
+  });
+
+  return params;
 }
