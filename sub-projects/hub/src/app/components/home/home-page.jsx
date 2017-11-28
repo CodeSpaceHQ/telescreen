@@ -1,6 +1,11 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { Button, Segment, Divider } from 'semantic-ui-react';
+import {
+  Button,
+  Segment,
+  Divider,
+  Header,
+} from 'semantic-ui-react';
 
 import '../app.css';
 
@@ -10,6 +15,7 @@ export default class HomePage extends React.Component {
     this.state = {
       navigateToAddAdmin: false,
       navigatetoAddPOI: false,
+      navigatetoViewPOI: false,
     };
   }
 
@@ -18,9 +24,18 @@ export default class HomePage extends React.Component {
       return <Redirect to='/add-admin' />;
     } else if (this.state.navigatetoAddPOI) {
       return <Redirect to='/add-poi' />;
+    } else if (this.state.navigatetoViewPOI) {
+      return <Redirect to='/' />;
     }
     return (
       <div className='centered'>
+        <Header
+          as='h2'
+          color='blue'
+          textAlign='center'
+        >
+          Main Menu
+        </Header>
         <Segment padded>
           <Button
             icon='user plus'
@@ -38,6 +53,15 @@ export default class HomePage extends React.Component {
             fluid
             size='large'
             onClick={() => this.setState({ navigatetoAddPOI: true })}
+          />
+          <Divider hidden />
+          <Button
+            icon='map pin'
+            content='View Person of Interest Activity'
+            primary
+            fluid
+            size='large'
+            onClick={() => this.setState({ navigatetoViewPOI: true })}
           />
         </Segment>
       </div>
