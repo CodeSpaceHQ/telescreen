@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 // Declarations/Definitions
-const port = 3000;
+const port = 3001;
 const app = express();
 const format = ':method :url :status :response-time ms - :res[content-length]';
 const corsOptions = {};

@@ -7,7 +7,7 @@ const logger = require('logger.js');
 const app = require('./app.js');
 
 // Declarations/Definitions
-const port = 3000;
+const port = 3001;
 
 app.listen(port, () => {
   logger.info(`App is running at ${port} in ${app.get('env')} mode\n  Press ctrl-c to stop\n`);
