@@ -12,6 +12,7 @@ import {
   Divider,
 } from 'semantic-ui-react';
 
+import HomeButton from '../home/home-button.jsx';
 import '../app.css';
 
 
@@ -69,46 +70,49 @@ class AddPOI extends React.Component {
 
   render() {
     return (
-      <div className='centered'>
-        <Grid
-          className='center aligned grid'
-          textAlign='center'
-        >
-          <Grid.Column>
-            <Header
-              as='h2'
-              color='blue'
-              textAlign='center'
-            >
-                Add POI
-            </Header>
-            <Segment>
-              <Form>
-                <Form.Field>
-                  <Input
-                    icon='user'
-                    iconPosition='left'
-                    name='name'
-                    placeholder='Name'
-                    onChange={this.handleChange}
-                    value={this.state.name}
+      <div>
+        <HomeButton />
+        <div className='centered'>
+          <Grid
+            className='center aligned grid'
+            textAlign='center'
+          >
+            <Grid.Column>
+              <Header
+                as='h2'
+                color='blue'
+                textAlign='center'
+              >
+                  Add POI
+              </Header>
+              <Segment>
+                <Form>
+                  <Form.Field>
+                    <Input
+                      icon='user'
+                      iconPosition='left'
+                      name='name'
+                      placeholder='Name'
+                      onChange={this.handleChange}
+                      value={this.state.name}
+                    />
+                  </Form.Field>
+                  <input type='file' onChange={this.handleFile} />
+                  <Divider />
+                  <Button
+                    type='submit'
+                    icon='checkmark'
+                    content='Submit'
+                    fluid
+                    primary
+                    size='large'
+                    onClick={this.handleSubmit}
                   />
-                </Form.Field>
-                <input type='file' onChange={this.handleFile} />
-                <Divider />
-                <Button
-                  type='submit'
-                  icon='checkmark'
-                  content='Submit'
-                  fluid
-                  primary
-                  size='large'
-                  onClick={this.handleSubmit}
-                />
-              </Form>
-            </Segment>
-          </Grid.Column>
-        </Grid>
+                </Form>
+              </Segment>
+            </Grid.Column>
+          </Grid>
+        </div>
       </div>
     );
   }

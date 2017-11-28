@@ -15,13 +15,15 @@ class HomeButton extends React.Component {
       return <Redirect to='/home-page' />;
     }
     return (
-      <Button
-        icon='home'
-        primary
-        fluid
-        size='large'
-        onClick={() => this.setState({ navigateToAddAdmin: true })}
-      />
+      <div className='home-button'>
+        <Button
+          icon='home'
+          primary
+          fluid
+          size='large'
+          onClick={() => this.setState({ redirect: true })}
+        />
+      </div>
     );
   }
 }
