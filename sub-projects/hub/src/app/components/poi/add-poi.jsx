@@ -20,6 +20,8 @@ class AddPOI extends React.Component {
     super(props);
     this.state = {
       name: '',
+      data_uri: null,
+      processing: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -35,17 +37,34 @@ class AddPOI extends React.Component {
 
   handleSubmit() {
     axios.post('', {
-      email: this.state.email,
+      name: this.state.name,
+      data_uri: this.state.data_uri,
+      filename: this.state.filename,
+      filetype: this.state.filetype,
     })
-      .then(() => {
-        this.setState({ email: '' });
+      .then((data) => {
+        this.setState({
+          name: '',
+          processing: false,
+          uploaded_uri: data.uri,
+        });
       })
       .catch((error) => {
         logger.error(error);
       });
   }
 
-  handleFile() {
+  handleFile(e) {
+    const reader = new FileReader();
+    const file = e.target.files[0];
+
+    reader.onload = (upload) => {
+      this.setState({
+        data_uri: upload.target.result,
+        filename: file.name,
+        filetype: file.type,
+      });
+    };
   }
 
   render() {
@@ -75,14 +94,7 @@ class AddPOI extends React.Component {
                     value={this.state.name}
                   />
                 </Form.Field>
-                <Button
-                  type='submit'
-                  icon='image'
-                  content='Choose File'
-                  fluid
-                  size='large'
-                  onClick={this.handleFile}
-                />
+                <input type='file' onChange={this.handleFile} />
                 <Divider />
                 <Button
                   type='submit'
