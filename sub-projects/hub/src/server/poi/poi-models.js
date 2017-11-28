@@ -17,10 +17,6 @@ const PersonSchema = new Schema({
   name:{
     type: String,
     required: true
-  },
-  fileRef:{
-    type: String,
-    required: false
   }
 });
 

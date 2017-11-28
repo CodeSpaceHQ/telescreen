@@ -1,4 +1,5 @@
-const POI = require('personofinterest/poi-models');
+const POI = require('poi/poi-models');
+const AWS = require('poi/aws-s3.js');
 
 const errors =require('resoures/error.js');
 
@@ -12,10 +13,11 @@ async function createPerson(data){
     const info ={
       personId: data.personId
       name: data.name
-      fileRef: data.fileRef
     };
 
     const person = new POI(info);
+
+    await person.save();
 
     return person.personId;
   } catch (err) {

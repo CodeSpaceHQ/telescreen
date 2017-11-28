@@ -8,7 +8,7 @@ class Rekgoniton(object):
 	"""
 	def __init__(self):
 		self.client = boto3.client("rekognition")
-		self.image_list = ['cameron.jpg','rachel.jpg'];
+		self.image_list = ['cameron.jpg','rachel.jpg']
 
 	def compare(self, img):
 		"""
@@ -18,25 +18,25 @@ class Rekgoniton(object):
 		"""
 		i = 0
 		while i < len(self.image_list):
-			response = self.client.compare_faces(
-				SourceImage={
-					'S3Object':{
-						'Bucket': 'knownfaces',
-						'Name': self.image_list[i]
-						}
+		    response = self.client.compare_faces(
+			    SourceImage={
+				    'S3Object':{
+				    'Bucket': 'knownfaces',
+				    'Name': self.image_list[i]
+					}
 				},
-				TargetImage={
+			    TargetImage={
 					'Bytes': img
 				},
 				SimilarityThreshold=80,
 			)
 
-			if response['FaceMatches'] != []:
-				name = self.image_list[i]
-				name = name.strip('.jpg')
-				return True, name
+    	if response['FaceMatches'] != []:
+        	name = self.image_list[i]
+			name = name.strip('.jpg')
+			return True, name
 
-			elif response['FaceMatches'] == []:
-				return False, ''
+		else:
+			return False, ''
 
-			i += 1
+		i += 1

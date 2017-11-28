@@ -1,30 +1,34 @@
 const AWS = require('aws-sdk');
 const async = require('async');
-const bucketName = 'knownfaces';
 const path = require('path');
 const fs = require('fs');
-let pathParams, image, imageName;
+const log = require('custom-logger')
 
+const bucketName = 'knownfaces';
+let pathParams, image, imageName;
 const s3 = new AWS.S3({region: 'us-west-1'});
+
 const createItemObject = (callback) => {
+  Bucket: bucketName,
   const params = {
-    Bucket: bucketName,
-    Key: '${imageName}',
+    Key: imageName,
     ACL: 'public-read',
     Body: image
   };
-    s3.putObject(params, function(err, data){
-      if(err){
-        console.log("Error uploading image: ", err);
-        callback(err,NULL);
-      } else {
-        console.log("Successfully uploaded image on S3", data);
-        callback(null, data);
-      }
-    })
+
+  s3.putObject(params, (err, data) => {
+    if(err){
+      log.info("Error uploading image: ", err);
+      callback(err,NULL);
+    } else {
+      log.info("Successfully uploaded image on S3", data);
+      callback(null, data);
+    }
+  })
 }
+
 exports.upload = (req, res, next) => {
-  var tmp_path = req.files.file.pathParams;
+  const tmp_path = req.files.file.pathParams;
   image = fs.createReadStream(tmp_path);
   imageName = req.files.file.name;
   async.series([
