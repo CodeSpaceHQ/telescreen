@@ -1,6 +1,7 @@
 import React from 'react';
-import axios from 'axios';
-import logger from 'utils/logger';
+
+import * as server from 'server';
+import logger from 'utils/logger.js';
 
 import {
   Button,
@@ -19,13 +20,10 @@ class AddPOI extends React.Component {
     super(props);
     this.state = {
       name: '',
-      data_uri: null,
-      processing: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFile = this.handleFile.bind(this);
   }
 
   handleChange({ target }) {
@@ -35,35 +33,15 @@ class AddPOI extends React.Component {
   }
 
   handleSubmit() {
-    axios.post('', {
+    server.createPerson({
       name: this.state.name,
-      data_uri: this.state.data_uri,
-      filename: this.state.filename,
-      filetype: this.state.filetype,
     })
-      .then((data) => {
-        this.setState({
-          name: '',
-          processing: false,
-          uploaded_uri: data.uri,
-        });
+      .then(() => {
+        this.setState({ name: '' });
       })
       .catch((error) => {
         logger.error(error);
       });
-  }
-
-  handleFile(e) {
-    const reader = new FileReader();
-    const file = e.target.files[0];
-
-    reader.onload = (upload) => {
-      this.setState({
-        data_uri: upload.target.result,
-        filename: file.name,
-        filetype: file.type,
-      });
-    };
   }
 
   render() {
@@ -95,7 +73,7 @@ class AddPOI extends React.Component {
                       value={this.state.name}
                     />
                   </Form.Field>
-                  <input type='file' onChange={this.handleFile} />
+                  <input type='file' />
                   <Divider />
                   <Button
                     type='submit'
