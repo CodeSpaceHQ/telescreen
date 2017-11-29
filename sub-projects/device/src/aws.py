@@ -29,7 +29,7 @@ class AWS(object):
         represented in bytes.
         :param img: target image for comparing
         """
-        if (self.image_list) is None:
+        if not self.image_list:
             raise Execption('Image_List should not be empty.')
 
         names = []
