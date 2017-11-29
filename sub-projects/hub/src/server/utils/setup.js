@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const envValues = [
+  process.env.EMAIL_ADDRESS,
+  process.env.EMAIL_PASSWORD,
   process.env.PROD_MONGODB_URI,
   process.env.DEV_MONGODB_URI,
   process.env.INIT_USERNAME,

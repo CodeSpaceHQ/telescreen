@@ -1,6 +1,7 @@
 import React from 'react';
-import axios from 'axios';
-import logger from 'utils/logger';
+
+import * as server from 'server';
+import logger from 'utils/logger.js';
 
 import {
   Button,
@@ -10,9 +11,6 @@ import {
   Grid,
   Segment,
 } from 'semantic-ui-react';
-
-import '../app.css';
-
 
 class AddAdmin extends React.Component {
   constructor(props) {
@@ -32,7 +30,7 @@ class AddAdmin extends React.Component {
   }
 
   handleSubmit() {
-    axios.post('http://127.0.0.1:3000/api/users', {
+    server.createUser({
       email: this.state.email,
     })
       .then(() => {

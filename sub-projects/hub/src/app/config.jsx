@@ -1,7 +1,8 @@
 import React from 'react';
 import { HashRouter, Route, Redirect } from 'react-router-dom';
 
-import LoginPage from './components/auth/login-page.jsx';
+import Login from './components/login/login.jsx';
+import Permission from './components/permission/permission.jsx';
 import AddAdmin from './components/admin/add-admin.jsx';
 import MapView from './components/map/map-view.jsx';
 
@@ -15,7 +16,9 @@ const AppConfig = () => (
           <Redirect to='/auth' />
         )}
       />
-      <Route path='/auth' component={LoginPage} />
+
+      <Route path='/auth' component={Login} />
+      <Route path='/permission' component={Permission} />
       <Route path='/add-admin' component={AddAdmin} />
       <Route path='/map' component={MapView} />
     </div>

@@ -1,10 +1,6 @@
 import axios from 'axios';
-import logger from 'utils/logger.js';
 
-if (ENV === 'dev') {
-  // Ensures session cookie is stored and sent with requests during dev
-  axios.defaults.withCredentials = true;
-}
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 /**
  * The connection information for the server hosting the API.
@@ -13,39 +9,14 @@ if (ENV === 'dev') {
  * @param {number} timeout - Time in ms that each call should take
  */
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:3000/api', // TODO(asclines): Move this to env
+  baseURL: HUB_URL,
   timeout: 5000,
 });
 
-instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-
-/**
- * Promise callback for when API call finishes
- *
- * @typedef {function} OnApiCallFinished
- * @param {Object} - Response from API
- * @param {number} - Response status code
- */
-
-/**
- * Handles errors from API and logs them
- *
- * @param {Object} err - The error object recieved from Axios
- * @param {OnApiCallFinished} onError - Called with the correct error object
- */
-const errorHandler = (err, onError) => {
-  if (err.response) {
-    // Server responded with a status code outside 2xx range.
-    logger.error(err.response, 'Response error');
-  } else if (err.request) {
-    // No response recieved
-    logger.error(err.request, 'No response recieved');
-  } else {
-    // Who knows
-    logger.error(err.message, 'Request error');
-  }
-  onError(err);
-};
+const deviceInstance = axios.create({
+  baseURL: CLIENT_URL,
+  timeout: 5000,
+});
 
 /**
  * This class allows for easy building of a request to the API.
@@ -62,22 +33,19 @@ const errorHandler = (err, onError) => {
  *   });
  */
 export default class Connection {
-
   constructor() {
     this.config = {
       data: {},
-      params: {},
     };
 
-    this.status = 0;
-
+    this.isDevice = false;
     this.url = '/';
     this.method = 'get';
   }
 
-  responseHandler(response, onSuccess) {
-    onSuccess(response.data);
-    this.response = response;
+  setDevice() {
+    this.isDevice = true;
+    return this;
   }
 
   setMethod(method) {
@@ -85,8 +53,13 @@ export default class Connection {
     return this;
   }
 
-  setUrl(url) {
+  replaceURL(url) {
     this.url = url;
+    return this;
+  }
+
+  pushURL(url) {
+    this.url += url;
     return this;
   }
 
@@ -98,22 +71,17 @@ export default class Connection {
 
   get() { return this.setMethod('get'); }
 
-  users() { return this.setUrl('/users'); }
+  setup() { return this.replaceURL('/setup'); }
 
-  auth() { return this.setUrl('/auth'); }
+  users() { return this.replaceURL('/users'); }
 
-  events() { return this.setUrl('/events'); }
+  oauth() { return this.replaceURL('/oauth'); }
 
-  reports() { return this.setUrl('/reports'); }
+  token() { return this.pushURL('/token'); }
 
-  /**
-   * Helper method to add `/all` to endpoint.
-   * @returns {*}
-   */
-  all() {
-    this.endpoint = 'all';
-    return this;
-  }
+  authorize() { return this.pushURL('/authorize'); }
+
+  client() { return this.pushURL('/client'); }
 
   /**
    * Sets the body of the request object
@@ -135,24 +103,24 @@ export default class Connection {
    * @returns {Connection}
    */
   params(query) {
+    const params = new URLSearchParams();
+
     Object.keys(query).forEach((key) => {
-      this.config.params[key] = query[key];
+      params.append(key, query[key]);
     });
+
+    this.config.data = params.toString();
     return this;
   }
 
-  call(onSuccess, onError) {
+  call() {
     this.config.method = this.method;
-    if (this.endpoint) {
-      this.config.url = `${this.url}/${this.endpoint}`;
-    } else {
-      this.config.url = this.url;
+    this.config.url = this.url;
+
+    if (this.isDevice === false) {
+      return instance(this.config).then(res => res.data);
     }
 
-    instance(this.config).then((res) => {
-      this.responseHandler(res, onSuccess);
-    }).catch((err) => {
-      errorHandler(err, onError);
-    });
+    return deviceInstance(this.config).then(res => res.data);
   }
 }
