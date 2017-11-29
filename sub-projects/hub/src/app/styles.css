@@ -1,12 +1,15 @@
-body, html {
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .centered {
-    width: 400px;
+    position: absolute;
+    padding: 20px;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    width: 450px
+}
+.home-button {
+    width: 42px;
+    height: 45px;
+    margin: 10px;
+    padding: 0px;
 }
