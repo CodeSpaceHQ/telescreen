@@ -2,28 +2,17 @@ const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 const path = require('path');
 
-const base = require('./base.js');
+const base = require('./client-base.js');
+const values = require('./values.js');
 
-const buildPath = path.resolve(__dirname, '../public');
+const buildPath = path.resolve(__dirname, '../public/client');
 
-const dev = webpackMerge(base, {
-  output: {
-    path: buildPath,
-    publicPath: '/',
-    filename: 'bundle.js',
-  },
-
-  entry: {
-    app: [
-      './src/app/index.jsx',
-    ],
-  },
-
+const clientDev = webpackMerge(base, {
   // Enables source maps that can be accessed in browser dev tools
   devtool: 'cheap-module-eval-source-map',
 
   devServer: {
-    port: 8080,
+    port: 8081,
     host: '0.0.0.0',
     contentBase: buildPath,
     inline: true,
@@ -32,8 +21,11 @@ const dev = webpackMerge(base, {
   plugins: [
     new webpack.DefinePlugin({
       ENV: JSON.stringify('dev'),
+      HUB_URL: values.HUB_URL,
+      HUB_APP_URL: values.HUB_APP_URL,
+      CLIENT_URL: values.CLIENT_URL,
     }),
   ],
 });
 
-module.exports = dev;
+module.exports = clientDev;

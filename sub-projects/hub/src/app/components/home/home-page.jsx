@@ -7,8 +7,6 @@ import {
   Header,
 } from 'semantic-ui-react';
 
-import '../app.css';
-
 export default class HomePage extends React.Component {
   constructor(props) {
     super(props);

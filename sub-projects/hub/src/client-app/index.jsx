@@ -4,9 +4,9 @@ import { render } from 'react-dom';
 import 'semantic-ui-css/semantic.min.css';
 import './styles.css';
 
-import AppConfig from './config.jsx';
+import App from './App.jsx';
 
 render(
-  <AppConfig />,
+  <App />,
   document.getElementById('app'),
 );

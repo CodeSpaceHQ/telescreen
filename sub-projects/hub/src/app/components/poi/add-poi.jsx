@@ -13,8 +13,6 @@ import {
 } from 'semantic-ui-react';
 
 import HomeButton from '../home/home-button.jsx';
-import '../app.css';
-
 
 class AddPOI extends React.Component {
   constructor(props) {

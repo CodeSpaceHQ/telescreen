@@ -51,3 +51,14 @@ You should provide another if you want `nodemailer` to function.
 3. Go to `127.0.0.1:8080` in your browser
 
 Hot reloading is enabled, so changes that you make should be added automatically.
+
+#### Client Server
+
+1. Run `mongod` to start the MongoDB server
+2. Run `yarn run dev` and `yarn run dev-client` from the project directory
+3. Go to `127.0.0.1:8081` in your browser
+
+## Notes
+
+- If you need to mess around with the URLs the code hits when making requests, you'll have to modify `Telescreen\sub-projects\hub\webpack\values.js`.
+- The final product of the device setup server is `Telescreen\sub-projects\device\oauth.txt`. This contains the refresh token, access token, access token expiration date, and client id. You'll have to pass the access token to protected endpoints.
