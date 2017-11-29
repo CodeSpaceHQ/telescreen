@@ -23,7 +23,7 @@ export default class HomePage extends React.Component {
     } else if (this.state.navigatetoAddPOI) {
       return <Redirect to='/add-poi' />;
     } else if (this.state.navigatetoViewPOI) {
-      return <Redirect to='/home-page' />;
+      return <Redirect to='/map' />;
     }
     return (
       <div className='centered'>

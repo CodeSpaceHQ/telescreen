@@ -52,7 +52,7 @@ class Login extends React.Component {
 
         this.props.history.push('/permission');
       } else {
-        this.props.history.push('/add-admin');
+        this.props.history.push('/home-page');
       }
     } catch (err) {
       logger.error(err);
@@ -65,7 +65,7 @@ class Login extends React.Component {
     }
 
     if (OAuthManager.getRefresh()) {
-      return <Redirect to='/add-admin' />;
+      return <Redirect to='/home-page' />;
     }
 
     return (
