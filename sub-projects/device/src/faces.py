@@ -20,13 +20,6 @@ class Tracker(object):
         )
         self.trackers = []  # object tracker for each face
         self.tracking_count = 0
-        
-    @staticmethod
-    def detect_one(img):
-        face_cascade = CascadeClassifier("../data/haarcascades/haarcascade_frontalface_default.xml")
-        detected = face_cascade.detectMultiScale(img, 1.2, 5)
-        (x, y, w, h) = detected[0]
-        return img[y:y+w, x:x+h] 
 
     def detect_and_track(self, frame):
         """
@@ -122,45 +115,74 @@ class Tracker(object):
                               ))
         return positions
 
+    @staticmethod
+    def crop_face(img):
+        """
+        Given an image with a single face, crop the face out and return it.
+        :param img: 
+        :return: 
+        """
+        # get face classifier
+        face_cascade = CascadeClassifier(
+            "../data/haarcascades/haarcascade_frontalface_default.xml"
+        )
+        # detect all faces
+        detected = face_cascade.detectMultiScale(img, 1.2, 5)
+        # get first face detected (probably the largest one)
+        (x, y, w, h) = detected[0]
+        # return cropped image
+        return img[y:y+w, x:x+h]
+
 
 class Recognizer(object):
     
     def __init__(self, known_faces_path):
+        """
+        Create a recognizer object
+        :param known_faces_path: path to directory of known person faces
+        """
         self.known_faces_path = known_faces_path
         self.recognizer = LBPHFaceRecognizer_create()
-        self.subjects = [""]
+        self.subjects = []
         self.train()
-    
-    
+
     def train(self):
+        """
+        Gather all training data from the directory of known faces
+        and train the face recognizer on them.
+        :return: 
+        """
+        # gather training data
         faces, labels = self.prep_training_data()
         # train the recognizer
         self.recognizer.train(faces, numpy.array(labels))
         
     def prep_training_data(self):
-        labels = []
-        faces = []
-        directories = os.listdir(self.known_faces_path)
-        for directory in reversed(directories):
-            if directory.startswith('s'):
-                # directory, (i.e. s34) get label
-                opencv_label = int(directory[1:])
-                dir_path = self.known_faces_path + '/' + directory
-                image_paths = os.listdir(dir_path)
-                for image_file in image_paths:
-                    if image_file[0].isdigit():
-                        image_path = dir_path + '/' + image_file
-                        image = imread(image_path)
-                        image = cvtColor(image, COLOR_BGR2GRAY)
-                        face = Tracker.detect_one(image)
-                        labels.append(opencv_label)
-                        faces.append(face)
-                    else:
-                        self.subjects.append(image_file)
-        print(self.subjects)
+        labels = []  # labels for faces
+        faces = []  # images of each face (multiple per label for better train)
+        # get all subjects in the known faces directory
+        known_people = os.listdir(self.known_faces_path)
+        # only train on subject directories (i.e. s0, s1,...,sN)
+        known_people = [d for d in known_people if d[0] == 's']
+        known_people = reversed(known_people)
+        for person_directory in known_people:
+            person_path = self.known_faces_path + '/' + person_directory
+            train_label = int(person_directory[1:])
+            # only train on numerically labeled images (i.e. 1.png, 2.png...)
+            image_directory = [f for f in os.listdir(person_path)
+                               if f[0].isdigit()]
+
+            for file in image_directory:
+                image_path = person_path + '/' + file
+                image = imread(image_path)
+                gray = cvtColor(image, COLOR_BGR2GRAY)
+                face = Tracker.crop_face(gray)
+                # append label for person
+                labels.append(train_label)
+                # append person's face
+                faces.append(face)
         return faces, labels
                             
     def predict(self, face):
         # returns label, accuracy
         return self.recognizer.predict(face)
-        
