@@ -12,11 +12,12 @@ import {
   Segment,
 } from 'semantic-ui-react';
 
-class OAuth extends React.Component {
+class SetupForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: '',
+      location: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -35,6 +36,7 @@ class OAuth extends React.Component {
       await server.createClient({
         redirectURL: window.location.origin,
         name: this.state.name,
+        location: this.state.location,
       });
 
       OAuthManager.setState(state);
@@ -65,6 +67,16 @@ class OAuth extends React.Component {
                 value={this.state.name}
               />
             </Form.Field>
+            <Form.Field>
+              <Input
+                required
+                name='location'
+                type='text'
+                placeholder='Where is your device located?'
+                onChange={this.handleChange}
+                value={this.state.location}
+              />
+            </Form.Field>
             <Button
               primary
               fluid
@@ -80,4 +92,4 @@ class OAuth extends React.Component {
   }
 }
 
-export default OAuth;
+export default SetupForm;
