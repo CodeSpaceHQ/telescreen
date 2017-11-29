@@ -11,6 +11,7 @@ class OAuthManager {
     this.externClientRedirectKey = 'externClientRedirect';
     this.stateKey = 'state';
     this.codeKey = 'code';
+    this.possible = 'abcdefghijklmnopqrstuvwxyz0123456789';
   }
 
   async refreshToken() {
@@ -38,6 +39,16 @@ class OAuthManager {
     if (new Date() > new Date(this.getAccessExpires())) {
       await this.refreshToken();
     }
+  }
+
+  genState(len) {
+    let state = '';
+
+    for (let i = 0; i < len; i += 1) {
+      state += this.possible.charAt(Math.floor(Math.random() * this.possible.length));
+    }
+
+    return state;
   }
 
   getRefresh() {
