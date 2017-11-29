@@ -4,9 +4,9 @@ import { HashRouter, Route, Redirect } from 'react-router-dom';
 import logger from 'utils/logger.js';
 import * as locationUtils from 'utils/location.js';
 import OAuthManager from 'server/oauth-manager.js';
-import * as server from 'server';
 
 import SetupForm from './components/SetupForm.jsx';
+import Finished from './components/Finished.jsx';
 
 const App = () => (
   <HashRouter>
@@ -23,16 +23,8 @@ const App = () => (
             if (params.state !== OAuthManager.getState()) {
               logger.error(`Invalid state: ${params.state}`);
             } else {
-              output = null;
               OAuthManager.setCode(params.code);
-
-              server.token(params.code)
-                .then((res) => {
-                  console.log(res);
-                })
-                .catch((err) => {
-                  logger.error(err.message);
-                });
+              output = <Redirect to='/finished' />;
             }
           }
 
@@ -41,6 +33,7 @@ const App = () => (
       />
 
       <Route path='/setup' component={SetupForm} />
+      <Route path='/finished' component={Finished} />
     </div>
   </HashRouter>
 );
