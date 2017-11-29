@@ -161,7 +161,6 @@ class Recognizer(object):
         return faces, labels
                             
     def predict(self, face):
-        label, accuracy = self.recognizer.predict(face)
-        text = "{} %{}".format(self.subjects[label], accuracy)
-        return text
+        # returns label, accuracy
+        return self.recognizer.predict(face)
         

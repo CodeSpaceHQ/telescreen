@@ -2,6 +2,7 @@ from screenstream import WebCamStream
 from faces import Tracker
 from faces import Recognizer
 import cv2
+import time
 
 
 def draw_rectangle(img, x, y, w, h):
@@ -13,6 +14,14 @@ def draw_rectangle(img, x, y, w, h):
     
 def draw_text(img, text, x, y):
     cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
+    
+
+def send_name(name, accuracy):
+    timestamp = time.gmtime()
+    payload = {"name": name, "accuracy": accuracy,
+               "timestamp": timestamp, "cameraid":1
+               }
+    print("Sending payload: {}".format(payload))
     
 
 def main():
@@ -37,10 +46,10 @@ def main():
         faces = tracker.get_coordinates()
         for (x, y, w, h) in faces:
             draw_rectangle(frame, x, y, w, h)
-            prediction = recognizer.predict(gray_frame[y:y+w, x:x+h])
+            prediction, accuracy = recognizer.predict(gray_frame[y:y+w, x:x+h])
             if prediction:
                 draw_text(frame, prediction, x, y)
-                
+                send_name(prediction, accuracy)
         # detect new faces every 15th frame
         if frame_count == 15:
             new_count = tracker.detect_and_track(gray_frame)
