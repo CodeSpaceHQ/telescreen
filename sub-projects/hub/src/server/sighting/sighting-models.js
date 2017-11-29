@@ -18,23 +18,35 @@ const sightingSchema = new Schema({
     type: String,
     required: true,
   },
-  timeStart: {
+  time: {
+    type: Date,
+  },
+});
+
+const latestSightingSchema = new Schema({
+  cameraId: {
+    type: String,
+    required: true,
+  },
+  POIId: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  time: {
     type: Date,
     default: null,
   },
-  timeEnd: {
-    type: Date,
-    default: Date.now,
-  }
 });
 
-sightingSchema.pre('save', function pre(next) {
-    const sighting = this;
-    next();
-    return;
-});
+// sightingSchema.pre('save', function pre(next) {
+//     const sighting = this;
+//     next();
+//     return;
+// });
 
+const LatestSighting = mongoose.model('LatestSighting', latestSightingSchema);
 
 const Sighting = mongoose.model('Sighting', sightingSchema);
 
-module.exports = { Sighting };
+module.exports = { Sighting, LatestSighting };

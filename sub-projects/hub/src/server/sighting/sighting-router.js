@@ -7,11 +7,8 @@ const sightingRouter = express.Router();
 
 sightingRouter.post('/', authManager.verify, (req, res) => {
   sightingManager.createSighting(req.body)
-    .then((uid) => {
-      return sightingManager.createLatestSighting(req.body);
-    })
-    .then((uid) => {
-      res.status(201).json({ uid }).end();
+    .then((sightingID) => {
+      res.status(201).json({ sightingID }).end();
     })
     .catch((err) => {
       res.status(400).json({ message: err.message }).end();
