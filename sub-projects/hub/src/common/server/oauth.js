@@ -12,7 +12,7 @@ export async function authorize(state) {
       access_token: OAuthManager.getAccess(),
       state,
       response_type: 'code',
-      client_id: OAuthManager.getClientID(),
+      client_id: OAuthManager.getExternClientID(),
     })
     .call();
 

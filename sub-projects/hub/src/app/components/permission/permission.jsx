@@ -15,7 +15,7 @@ async function handleClick() {
   try {
     const res = await server.authorize(OAuthManager.getState());
 
-    locationUtils.navigate(OAuthManager.getClientRedirect(), {
+    locationUtils.navigate(OAuthManager.getExternClientRedirect(), {
       state: OAuthManager.getState(),
       code: res.code,
     });

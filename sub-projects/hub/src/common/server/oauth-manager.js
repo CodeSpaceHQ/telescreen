@@ -7,6 +7,8 @@ class OAuthManager {
     this.accessExpiresKey = 'accessExpires';
     this.clientIDKey = 'clientID';
     this.clientRedirectKey = 'clientRedirect';
+    this.externClientIDKey = 'externClientID';
+    this.externClientRedirectKey = 'externClientRedirect';
     this.stateKey = 'state';
   }
 
@@ -75,6 +77,22 @@ class OAuthManager {
 
   setClientRedirect(clientRedirect) {
     localStorage.setItem(this.clientRedirectKey, clientRedirect);
+  }
+
+  getExternClientID() {
+    return localStorage.getItem(this.externClientIDKey);
+  }
+
+  setExternClientID(externClientID) {
+    localStorage.setItem(this.externClientIDKey, externClientID);
+  }
+
+  getExternClientRedirect() {
+    return localStorage.getItem(this.externClientRedirectKey);
+  }
+
+  setExternClientRedirect(externClientRedirect) {
+    localStorage.setItem(this.externClientRedirectKey, externClientRedirect);
   }
 
   getState() {
