@@ -47,6 +47,9 @@ const clientSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  location: {
+    type: String,
+  },
 });
 
 clientSchema.statics.genId = async function genId() {

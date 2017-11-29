@@ -281,6 +281,7 @@ async function createClient(options) {
       redirectURL: options.redirectURL,
       email: options.email,
       name: options.name,
+      location: options.location,
     }).save();
 
     return client._id.toString();
