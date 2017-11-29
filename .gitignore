@@ -7,7 +7,8 @@
 # Dependency directories
 node_modules/
 
-# dotenv environment variables file
+# settings files
+oauth.txt
 .env
 
 # Webpack bundles

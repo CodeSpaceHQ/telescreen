@@ -3,6 +3,9 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const fs = require('fs');
+const path = require('path');
+
 // Declarations/Definitions
 const port = 3001;
 const app = express();
@@ -26,6 +29,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes.
 app.use('/', express.static(`${__dirname}/../../public/client`));
+
+app.post('/setup', (req, res) => {
+  const body = req.body;
+
+  let content = '';
+  Object.keys(body).forEach((key) => {
+    content += `${key}=${body[key]}\n`;
+  });
+
+  const filePath = path.resolve(__dirname, '../../../device/oauth.txt');
+
+  fs.writeFile(filePath, content, (err) => {
+    if (err) {
+      res.status(400).json({ message: err.message }).end();
+    }
+
+    res.status(200).end();
+  });
+});
 
 // 404.
 app.use((req, res, next) => {
