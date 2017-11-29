@@ -9,12 +9,12 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
  * @param {number} timeout - Time in ms that each call should take
  */
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:3000/api',
+  baseURL: HUB_URL,
   timeout: 5000,
 });
 
 const deviceInstance = axios.create({
-  baseURL: 'http://127.0.0.1:3001',
+  baseURL: CLIENT_URL,
   timeout: 5000,
 });
 

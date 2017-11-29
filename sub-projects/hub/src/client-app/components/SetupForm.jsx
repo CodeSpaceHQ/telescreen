@@ -41,7 +41,7 @@ class SetupForm extends React.Component {
 
       OAuthManager.setState(state);
 
-      locationUtils.navigate('http://127.0.0.1:8080/', {
+      locationUtils.navigate(HUB_APP_URL, {
         state,
         client_id: OAuthManager.getClientID(),
         redirect_uri: OAuthManager.getClientRedirect(),
