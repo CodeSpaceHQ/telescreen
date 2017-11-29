@@ -10,6 +10,7 @@ class OAuthManager {
     this.externClientIDKey = 'externClientID';
     this.externClientRedirectKey = 'externClientRedirect';
     this.stateKey = 'state';
+    this.codeKey = 'code';
   }
 
   async refreshToken() {
@@ -101,6 +102,14 @@ class OAuthManager {
 
   setState(state) {
     localStorage.setItem(this.stateKey, state);
+  }
+
+  getCode() {
+    return localStorage.getItem(this.codeKey);
+  }
+
+  setCode(code) {
+    localStorage.setItem(this.codeKey, code);
   }
 }
 
