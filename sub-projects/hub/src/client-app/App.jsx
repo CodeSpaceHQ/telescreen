@@ -5,6 +5,8 @@ import logger from 'utils/logger.js';
 import * as locationUtils from 'utils/location.js';
 import OAuthManager from 'server/oauth-manager.js';
 
+import OAuth from './components/OAuth.jsx';
+
 const App = () => (
   <HashRouter>
     <div>
@@ -29,6 +31,8 @@ const App = () => (
           return output;
         }}
       />
+
+      <Route path='/oauth' component={OAuth} />
     </div>
   </HashRouter>
 );
