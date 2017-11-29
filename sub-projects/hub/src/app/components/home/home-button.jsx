@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { Button } from 'semantic-ui-react';
+import { Menu, Icon } from 'semantic-ui-react';
 
 class HomeButton extends React.Component {
   constructor(props) {
@@ -16,13 +16,15 @@ class HomeButton extends React.Component {
     }
     return (
       <div className='home-button'>
-        <Button
-          icon='home'
-          primary
-          fluid
-          size='large'
-          onClick={() => this.setState({ redirect: true })}
-        />
+        <Menu icon='labeled' vertical>
+          <Menu.Item
+            name='home'
+            onClick={() => this.setState({ redirect: true })}
+          >
+            <Icon name='home' />
+            Home
+          </Menu.Item>
+        </Menu>
       </div>
     );
   }
