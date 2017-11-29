@@ -83,7 +83,7 @@ const tokenSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: values.authorizationCodeLifetime,
+    expires: values.accessTokenLifetime,
   },
   expires: {
     type: Date,
