@@ -13,6 +13,11 @@ const instance = axios.create({
   timeout: 5000,
 });
 
+const deviceInstance = axios.create({
+  baseURL: 'http://127.0.0.1:3001',
+  timeout: 5000,
+});
+
 /**
  * This class allows for easy building of a request to the API.
  *
@@ -33,8 +38,14 @@ export default class Connection {
       data: {},
     };
 
+    this.isDevice = false;
     this.url = '/';
     this.method = 'get';
+  }
+
+  setDevice() {
+    this.isDevice = true;
+    return this;
   }
 
   setMethod(method) {
@@ -59,6 +70,8 @@ export default class Connection {
   put() { return this.setMethod('put'); }
 
   get() { return this.setMethod('get'); }
+
+  setup() { return this.replaceURL('/setup'); }
 
   users() { return this.replaceURL('/users'); }
 
@@ -104,6 +117,10 @@ export default class Connection {
     this.config.method = this.method;
     this.config.url = this.url;
 
-    return instance(this.config).then(res => res.data);
+    if (this.isDevice === false) {
+      return instance(this.config).then(res => res.data);
+    }
+
+    return deviceInstance(this.config).then(res => res.data);
   }
 }
