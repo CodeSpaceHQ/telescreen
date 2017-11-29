@@ -14,7 +14,7 @@
     "dev": "npm-run-all --parallel dev-server dev-app",
     "dev-app": "webpack-dev-server --env=app-dev",
     "dev-server": "cross-env NODE_ENV=development node src/server/server.js",
-    "dev-client": "npm-run-all dev-client-app dev-client-server",
+    "dev-client": "npm-run-all --parallel dev-client-app dev-client-server",
     "dev-client-app": "webpack-dev-server --env=client-dev",
     "dev-client-server": "cross-env NODE_ENV=development node src/client-server/server.js",
     "test": "npm-run-all --parallel --continue-on-error test-server",

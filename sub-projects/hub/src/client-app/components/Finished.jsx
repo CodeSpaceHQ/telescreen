@@ -23,6 +23,8 @@ class Finished extends React.Component {
     try {
       await server.token(OAuthManager.getCode());
 
+      await server.setup();
+
       this.setState({
         finished: true,
       });
