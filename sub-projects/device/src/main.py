@@ -66,11 +66,9 @@ def main():
         frame = video.read()  # get current frame
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # convert to gray
         faces = tracker.get_coordinates()  # coordinates of detected faces
-        prediction = "unknown"  # initial prediction
 
         for (x, y, w, h) in faces:
             draw_rectangle(frame, x, y, w, h)  # highlight with rectangle
-            draw_text(frame, prediction, x, y)  # draw prediction
             # if more faces were detected since last time
             if new_count > detected_count:
                 # update face count and attempt to recognize all faces
@@ -78,7 +76,8 @@ def main():
                 detected_count = new_count
                 prediction, accuracy = recognizer.predict(
                     gray_frame[y:y + w, x:x + h])
-                if prediction:
+                print(prediction, accuracy)
+                if prediction is not None:
                     # send the predicted name to the server
                     send_name(prediction, accuracy)
 

@@ -184,5 +184,6 @@ class Recognizer(object):
         return faces, labels
                             
     def predict(self, face):
+        
         # returns label, accuracy
         return self.recognizer.predict(face)
