@@ -12,7 +12,6 @@ const Schema = mongoose.Schema;
 const sightingSchema = new Schema({
   cameraId: {
     type: String,
-    unique: true,
     required: true,
   },
   POIId: {
@@ -25,7 +24,7 @@ const sightingSchema = new Schema({
   },
   timeEnd: {
     type: Date,
-    default: null,
+    default: Date.now,
   }
 });
 
