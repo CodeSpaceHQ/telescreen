@@ -6,7 +6,6 @@ import OAuthManager from 'server/oauth-manager.js';
 
 import {
   Header,
-  Segment,
   Dimmer,
   Loader,
 } from 'semantic-ui-react';
@@ -19,34 +18,33 @@ class Finished extends React.Component {
     };
   }
 
-  componentDidMount() {
-    server.token(OAuthManager.getCode())
-      .then(() => {
-        this.setState({
-          finished: true,
-        });
-      })
-      .catch((err) => {
-        logger.error(err.message);
+  /* eslint-disable react/no-did-mount-set-state */
+  async componentDidMount() {
+    try {
+      await server.token(OAuthManager.getCode());
+
+      this.setState({
+        finished: true,
       });
+    } catch (err) {
+      logger.error(err.message);
+    }
   }
 
   render() {
     return (
       <div className='centered'>
-        <Segment>
-          <Dimmer active={!this.state.finished}>
-            <Loader />
-          </Dimmer>
+        <Dimmer active={!this.state.finished}>
+          <Loader />
+        </Dimmer>
 
-          <Header
-            as='h2'
-            color='blue'
-            textAlign='center'
-          >
-            Device has been set up!
-          </Header>
-        </Segment>
+        <Header
+          as='h2'
+          color='blue'
+          textAlign='center'
+        >
+          Device has been set up!
+        </Header>
       </div>
     );
   }
