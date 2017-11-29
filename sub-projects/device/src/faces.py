@@ -1,18 +1,34 @@
 import dlib
+import numpy
+import os
+from cv2 import CascadeClassifier
+from cv2 import imread
+from cv2.face import LBPHFaceRecognizer_create
+from cv2 import cvtColor, COLOR_BGR2GRAY
 
 
-class FacesTracker(object):
+class Tracker(object):
     """
     A class that takes an input stream of image frames and attempts to detect
     and track any faces within those frames.
     """
 
-    def __init__(self, classifier):
-        self.face_cascade = classifier
+    def __init__(self):
+            # create classifier to determine what a face is
+        self.face_cascade = CascadeClassifier(
+        "../data/haarcascades/haarcascade_frontalface_default.xml"
+        )
         self.trackers = []  # object tracker for each face
         self.tracking_count = 0
+        
+    @staticmethod
+    def detect_one(img):
+        face_cascade = CascadeClassifier("../data/haarcascades/haarcascade_frontalface_default.xml")
+        detected = face_cascade.detectMultiScale(img, 1.2, 5)
+        (x, y, w, h) = detected[0]
+        return img[y:y+w, x:x+h] 
 
-    def detect(self, frame):
+    def detect_and_track(self, frame):
         """
         Detect a face within a frame and pass off to 
         tracking.
@@ -105,3 +121,47 @@ class FacesTracker(object):
                               int(p.height())
                               ))
         return positions
+
+
+class Recognizer(object):
+    
+    def __init__(self, known_faces_path):
+        self.known_faces_path = known_faces_path
+        self.recognizer = LBPHFaceRecognizer_create()
+        self.subjects = [""]
+        self.train()
+    
+    
+    def train(self):
+        faces, labels = self.prep_training_data()
+        # train the recognizer
+        self.recognizer.train(faces, numpy.array(labels))
+        
+    def prep_training_data(self):
+        labels = []
+        faces = []
+        directories = os.listdir(self.known_faces_path)
+        for directory in reversed(directories):
+            if directory.startswith('s'):
+                # directory, (i.e. s34) get label
+                opencv_label = int(directory[1:])
+                dir_path = self.known_faces_path + '/' + directory
+                image_paths = os.listdir(dir_path)
+                for image_file in image_paths:
+                    if image_file[0].isdigit():
+                        image_path = dir_path + '/' + image_file
+                        image = imread(image_path)
+                        image = cvtColor(image, COLOR_BGR2GRAY)
+                        face = Tracker.detect_one(image)
+                        labels.append(opencv_label)
+                        faces.append(face)
+                    else:
+                        self.subjects.append(image_file)
+        print(self.subjects)
+        return faces, labels
+                            
+    def predict(self, face):
+        label, accuracy = self.recognizer.predict(face)
+        text = "{} %{}".format(self.subjects[label], accuracy)
+        return text
+        
