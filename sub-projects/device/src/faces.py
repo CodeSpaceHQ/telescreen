@@ -147,7 +147,7 @@ class Recognizer(object):
         self.train()
 
     def get_subjects(self):
-        file = open(self.known_faces_path + '/subject-names.txt', 'r')
+        file = open(self.known_faces_path + '/known-subject-names.txt', 'r')
         subjects = file.readlines()
         file.close()
         return subjects
