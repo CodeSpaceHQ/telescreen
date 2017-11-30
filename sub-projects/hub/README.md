@@ -20,8 +20,9 @@
 
 ```
 PORT=3000
-PROD_MONGODB_URI=mongodb://localhost:27017/test
-DEV_MONGODB_URI=mongodb://localhost:27017/test
+PROD_MONGODB_URI=mongodb://127.0.0.1:27017/telescreen-prod
+DEV_MONGODB_URI=mongodb://127.0.0.1:27017/telescreen-dev
+TEST_MONGODB_URI=mongodb://127.0.0.1:27017/telescreen-test
 
 SECRET=thisisoursecret
 SALT=10
