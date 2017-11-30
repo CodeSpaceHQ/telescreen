@@ -15,7 +15,7 @@ global.mockgoose = mockgoose;
 global.app = app;
 
 beforeAll(() => {
-  mockgoose(mongoose, { port: 654398 });
+  mockgoose(mongoose, { port: 65535 });
 
   return connection.open();
 });
