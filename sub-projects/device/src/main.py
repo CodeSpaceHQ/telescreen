@@ -1,8 +1,10 @@
 from screenstream import WebCamStream
 from faces import Tracker
 from faces import Recognizer
+from aws import AWS
 from time import gmtime, strftime
 import cv2
+
 
 
 def draw_rectangle(img, x, y, w, h):
@@ -52,6 +54,7 @@ def main():
     # create a tracker that uses the classifier
     tracker = Tracker()
     recognizer = Recognizer("./knownfaces/")
+    aws = AWS()
 
     # get a threaded video stream and start it
     # wake up time for standard webcam is >= 8 seconds
@@ -79,8 +82,8 @@ def main():
                     prediction, accuracy = recognizer.predict(
                         gray_frame[y:y + w, x:x + h])
                 else:
-                    prediction, accuracy = "", 0
-
+                    success, prediction = aws.compare(gray_frame[y:y + w, x:x + h])
+                    accuracy = "%80.00"
                 if prediction is not None:
                     # send the predicted name to the server
                     send_name(prediction, accuracy)
