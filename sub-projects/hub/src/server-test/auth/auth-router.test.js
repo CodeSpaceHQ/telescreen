@@ -5,6 +5,11 @@ const authTools = require('tools/auth-tools.js');
 const testUsers = require('tools/users.js');
 
 describe('Auth Router and Integration', () => {
+  beforeEach((done) => {
+    mockgoose.reset();
+    done();
+  });
+
   describe('POST /api/auth', () => {
     it('should return 201', () => authTools.createAndLoginUser(app, testUsers.admin000));
   });
