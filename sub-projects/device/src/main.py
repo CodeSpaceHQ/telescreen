@@ -72,7 +72,6 @@ def main():
         for (x, y, w, h) in faces:
             draw_rectangle(frame, x, y, w, h)  # highlight with rectangle
             # if more faces were detected since last time
-            print("{} > {}".format(new_count, detected_count))
             if new_count > detected_count:
                 # update face count and attempt to recognize all faces
                 # NOTE: could have it predict on only the latest detected faces
