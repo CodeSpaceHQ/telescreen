@@ -34,7 +34,7 @@ def draw_text(img, text, x, y):
     cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
 
 
-def send_name(name, accuracy):
+def send_name(name):
     """
     Send a name and accuracy score along with camera information
     to the backend server.
@@ -42,9 +42,7 @@ def send_name(name, accuracy):
     :param accuracy: accuracy score 
     """
     timestamp = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    payload = {"name": name, "accuracy": accuracy,
-               "timestamp": timestamp, "cameraid": 1
-               }
+    payload = {"name": name, "timestamp": timestamp, "cameraid": 1}
     # TODO: replace with request.POST
     print("Sending payload: {}".format(payload))
 
@@ -74,28 +72,30 @@ def main():
         for (x, y, w, h) in faces:
             draw_rectangle(frame, x, y, w, h)  # highlight with rectangle
             # if more faces were detected since last time
+            print("{} > {}".format(new_count, detected_count))
             if new_count > detected_count:
                 # update face count and attempt to recognize all faces
                 # NOTE: could have it predict on only the latest detected faces
                 detected_count = new_count
-                if choice == 1:
-                    prediction, accuracy = recognizer.predict(
+    
+                if choice == 1:  # local recognition
+                    success, prediction = recognizer.predict(
                         gray_frame[y:y + w, x:x + h])
-                else:
+                else:  # aws recognition
                     convert = bytes(cv2.imencode('.jpg', gray_frame)[1])
                     success, prediction = aws.compare(convert)
-                    accuracy = "%80.00"
-                if prediction is not None or success:
+
+                if success:
                     # send the predicted name to the server
-                    send_name(prediction, accuracy)
+                    send_name(prediction)
 
         # detect new faces every 15 frames
         if frame_count == 15:
             frame_count = 0
             new_count = tracker.detect_and_track(gray_frame)
-            # no faces detected, reset face count
-            if not new_count:
-                detected_count = 0
+            # found less faces, adjust detected
+            if new_count < detected_count:
+                detected_count = new_count
         else:
             # update object trackers
             tracker.update(gray_frame)

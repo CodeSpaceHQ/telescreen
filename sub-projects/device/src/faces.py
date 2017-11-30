@@ -192,6 +192,7 @@ class Recognizer(object):
                             
     def predict(self, face):
         label, accuracy = self.recognizer.predict(face)
-        name = self.subjects[label]
-        # returns name and accuracy of prediction
-        return name, accuracy
+        if label is None:
+            return False, ""
+        else:
+            return True, self.subjects[label]
