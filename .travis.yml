@@ -3,7 +3,6 @@ notifications:
 language: node_js
 node_js:
   - "8"
-services: mongodb
 cache: yarn
 addons:
   apt:
@@ -15,6 +14,7 @@ addons:
 env:
   - CXX=g++-4.8
 script:
+  - netstat
   - cd sub-projects/hub
   - node src/server/utils/setup.js
   - yarn install
