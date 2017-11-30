@@ -3,12 +3,10 @@ const request = require('supertest');
 require('test-globals.js');
 const authTools = require('tools/auth-tools.js');
 const testUsers = require('tools/users.js');
+const reset = require('utils/db.js').reset;
 
 describe('Auth Router and Integration', () => {
-  beforeEach((done) => {
-    mockgoose.reset();
-    done();
-  });
+  afterEach(() => reset());
 
   describe('POST /api/auth', () => {
     it('should return 201', () => authTools.createAndLoginUser(app, testUsers.admin000));

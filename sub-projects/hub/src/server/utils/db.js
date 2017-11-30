@@ -29,6 +29,12 @@ async function initialize() {
   }
 }
 
+async function reset() {
+  const admin = Admin.deleteMany({}).exec();
+  await admin;
+}
+
 module.exports = {
   initialize,
+  reset,
 };
