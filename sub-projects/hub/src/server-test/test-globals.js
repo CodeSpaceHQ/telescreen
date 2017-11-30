@@ -6,22 +6,28 @@ require('dotenv').load({ path: path.resolve(__dirname, '../../.env') });
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
 const mongoose = require('mongoose');
-const mockgoose = require('mockgoose');
 const app = require('app.js');
-const connection = require('connection.js');
+
+mongoose.Promise = global.Promise;
+let mongoURL;
+if (process.env.NODE_ENV === 'production') {
+  mongoURL = process.env.PROD_MONGODB_URI;
+} else {
+  mongoURL = process.env.DEV_MONGODB_URI;
+}
 
 global.mongoose = mongoose;
-global.mockgoose = mockgoose;
 global.app = app;
 
-beforeAll(() => {
-  mockgoose(mongoose, { port: 65535 });
+beforeAll((done) => {
+  mongoose.connect(mongoURL, (err) => {
+    if (err) {
+      done(err);
+      return;
+    }
 
-  return connection.open();
-});
-
-afterAll((done) => {
-  mongoose.unmock(() => {
     done();
   });
 });
+
+afterAll(() => mongoose.disconnect());
