@@ -1,18 +1,27 @@
 import dlib
+import numpy
+import os
+from cv2 import CascadeClassifier
+from cv2 import imread
+from cv2.face import LBPHFaceRecognizer_create
+from cv2 import cvtColor, COLOR_BGR2GRAY
 
 
-class FacesTracker(object):
+class Tracker(object):
     """
     A class that takes an input stream of image frames and attempts to detect
     and track any faces within those frames.
     """
 
-    def __init__(self, classifier):
-        self.face_cascade = classifier
+    def __init__(self):
+            # create classifier to determine what a face is
+        self.face_cascade = CascadeClassifier(
+        "../data/haarcascades/haarcascade_frontalface_default.xml"
+        )
         self.trackers = []  # object tracker for each face
         self.tracking_count = 0
 
-    def detect(self, frame):
+    def detect_and_track(self, frame):
         """
         Detect a face within a frame and pass off to 
         tracking.
@@ -105,3 +114,85 @@ class FacesTracker(object):
                               int(p.height())
                               ))
         return positions
+
+    @staticmethod
+    def crop_face(img):
+        """
+        Given an image with a single face, crop the face out and return it.
+        :param img: 
+        :return: 
+        """
+        # get face classifier
+        face_cascade = CascadeClassifier(
+            "../data/haarcascades/haarcascade_frontalface_default.xml"
+        )
+        # detect all faces
+        detected = face_cascade.detectMultiScale(img, 1.2, 5)
+        # get first face detected (probably the largest one)
+        (x, y, w, h) = detected[0]
+        # return cropped image
+        return img[y:y+w, x:x+h]
+
+
+class Recognizer(object):
+    
+    def __init__(self, known_faces_path):
+        """
+        Create a recognizer object
+        :param known_faces_path: path to directory of known person faces
+        """
+        self.known_faces_path = known_faces_path
+        self.recognizer = LBPHFaceRecognizer_create()
+        self.subjects = []
+        self.train()
+
+    def get_subjects(self):
+        file = open(self.known_faces_path + '/known-subject-names.txt', 'r')
+        subjects = file.readlines()
+        file.close()
+        return subjects
+
+    def train(self):
+        """
+        Gather all training data from the directory of known faces
+        and train the face recognizer on them.
+        :return: 
+        """
+        self.subjects = self.get_subjects()
+        # gather training data
+        faces, labels = self.prep_training_data()
+        # train the recognizer
+        self.recognizer.train(faces, numpy.array(labels))
+        
+    def prep_training_data(self):
+        labels = []  # labels for faces
+        faces = []  # images of each face (multiple per label for better train)
+        # get all subjects in the known faces directory
+        known_people = os.listdir(self.known_faces_path)
+        # only train on subject directories (i.e. s0, s0,...,sN)
+        known_people = [d for d in known_people if d[0] == 's']
+        known_people = reversed(known_people)
+        for person_directory in known_people:
+            person_path = self.known_faces_path + '/' + person_directory
+            train_label = int(person_directory[1:])
+            # only train on numerically labeled images (i.e. 1.png, 2.png...)
+            image_directory = [f for f in os.listdir(person_path)
+                               if f[0].isdigit()]
+
+            for file in image_directory:
+                image_path = person_path + '/' + file
+                image = imread(image_path)
+                gray = cvtColor(image, COLOR_BGR2GRAY)
+                face = Tracker.crop_face(gray)
+                # append label for person
+                labels.append(train_label)
+                # append person's face
+                faces.append(face)
+        return faces, labels
+                            
+    def predict(self, face):
+        label, accuracy = self.recognizer.predict(face)
+        if label is None:
+            return False, ""
+        else:
+            return True, self.subjects[label]

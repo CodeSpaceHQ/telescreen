@@ -6,8 +6,6 @@ on a Raspberry Pi device.
 from threading import Thread, Event
 from time import sleep
 from cv2 import VideoCapture
-from picamera.array import PiRGBArray
-from picamera import PiCamera
 
 
 class WebCamStream(object):
