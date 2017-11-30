@@ -1,5 +1,6 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import {
   Button,
   Segment,
@@ -11,20 +12,10 @@ export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      navigateToAddAdmin: false,
-      navigatetoAddPOI: false,
-      navigatetoViewPOI: false,
     };
   }
 
   render() {
-    if (this.state.navigateToAddAdmin) {
-      return <Redirect to='/add-admin' />;
-    } else if (this.state.navigatetoAddPOI) {
-      return <Redirect to='/add-poi' />;
-    } else if (this.state.navigatetoViewPOI) {
-      return <Redirect to='/map' />;
-    }
     return (
       <div className='centered'>
         <Header
@@ -41,7 +32,7 @@ export default class HomePage extends React.Component {
             primary
             fluid
             size='large'
-            onClick={() => this.setState({ navigateToAddAdmin: true })}
+            onClick={() => this.props.history.push('/add-admin')}
           />
           <Divider hidden />
           <Button
@@ -50,7 +41,7 @@ export default class HomePage extends React.Component {
             primary
             fluid
             size='large'
-            onClick={() => this.setState({ navigatetoAddPOI: true })}
+            onClick={() => this.props.history.push('/add-poi')}
           />
           <Divider hidden />
           <Button
@@ -59,10 +50,16 @@ export default class HomePage extends React.Component {
             primary
             fluid
             size='large'
-            onClick={() => this.setState({ navigatetoViewPOI: true })}
+            onClick={() => this.props.history.push('/map')}
           />
         </Segment>
       </div>
     );
   }
 }
+
+HomePage.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
