@@ -1,8 +1,8 @@
 from screenstream import WebCamStream
 from faces import Tracker
 from faces import Recognizer
+from time import gmtime, strftime
 import cv2
-import time
 
 
 def draw_rectangle(img, x, y, w, h):
@@ -39,7 +39,7 @@ def send_name(name, accuracy):
     :param name: name of recognized person
     :param accuracy: accuracy score 
     """
-    timestamp = time.gmtime()
+    timestamp = strftime("%Y-%m-%d %H:%M:%S", gmtime())
     payload = {"name": name, "accuracy": accuracy,
                "timestamp": timestamp, "cameraid": 1
                }
@@ -48,6 +48,7 @@ def send_name(name, accuracy):
 
 
 def main():
+    choice = input("Would you like local (1) or AWS (2) recognition?: ")
     # create a tracker that uses the classifier
     tracker = Tracker()
     recognizer = Recognizer("./knownfaces/")
@@ -74,9 +75,12 @@ def main():
                 # update face count and attempt to recognize all faces
                 # NOTE: could have it predict on only the latest detected faces
                 detected_count = new_count
-                prediction, accuracy = recognizer.predict(
-                    gray_frame[y:y + w, x:x + h])
-                print(prediction, accuracy)
+                if choice == 1:
+                    prediction, accuracy = recognizer.predict(
+                        gray_frame[y:y + w, x:x + h])
+                else:
+                    prediction, accuracy = "", 0
+
                 if prediction is not None:
                     # send the predicted name to the server
                     send_name(prediction, accuracy)
