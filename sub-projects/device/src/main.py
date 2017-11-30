@@ -48,7 +48,7 @@ def send_name(name):
 
 
 def main():
-    choice = input("Would you like local (1) or AWS (2) recognition?: ")
+    choice = int(input("Would you like local (1) or AWS (2) recognition?: "))
     # create a tracker that uses the classifier
     tracker = Tracker()
     recognizer = Recognizer("./knownfaces/")
@@ -77,7 +77,7 @@ def main():
                 # update face count and attempt to recognize all faces
                 # NOTE: could have it predict on only the latest detected faces
                 detected_count = new_count
-    
+
                 if choice == 1:  # local recognition
                     success, prediction = recognizer.predict(
                         gray_frame[y:y + w, x:x + h])
