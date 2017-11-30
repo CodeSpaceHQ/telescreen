@@ -22,6 +22,7 @@ class AWS(object):
 
         for contents in response['Contents']:
             self.image_list.append(contents['Key'])
+        print(self.image_list)
 
     def compare(self, img):
         """
@@ -48,7 +49,6 @@ class AWS(object):
                 },
                 SimilarityThreshold=80,
             )
-
             if response['FaceMatches']:
                 name = source.strip('.jpg')
                 names.append(name)

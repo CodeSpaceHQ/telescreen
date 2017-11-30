@@ -82,9 +82,10 @@ def main():
                     prediction, accuracy = recognizer.predict(
                         gray_frame[y:y + w, x:x + h])
                 else:
-                    success, prediction = aws.compare(gray_frame[y:y + w, x:x + h])
+                    convert = bytes(cv2.imencode('.jpg', gray_frame)[1])
+                    success, prediction = aws.compare(convert)
                     accuracy = "%80.00"
-                if prediction is not None:
+                if prediction is not None or success:
                     # send the predicted name to the server
                     send_name(prediction, accuracy)
 
