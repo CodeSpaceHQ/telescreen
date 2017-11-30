@@ -146,12 +146,19 @@ class Recognizer(object):
         self.subjects = []
         self.train()
 
+    def get_subjects(self):
+        file = open(self.known_faces_path + '/subject-names.txt', 'r')
+        subjects = file.readlines()
+        file.close()
+        return subjects
+
     def train(self):
         """
         Gather all training data from the directory of known faces
         and train the face recognizer on them.
         :return: 
         """
+        self.subjects = self.get_subjects()
         # gather training data
         faces, labels = self.prep_training_data()
         # train the recognizer
@@ -162,7 +169,7 @@ class Recognizer(object):
         faces = []  # images of each face (multiple per label for better train)
         # get all subjects in the known faces directory
         known_people = os.listdir(self.known_faces_path)
-        # only train on subject directories (i.e. s0, s1,...,sN)
+        # only train on subject directories (i.e. s0, s0,...,sN)
         known_people = [d for d in known_people if d[0] == 's']
         known_people = reversed(known_people)
         for person_directory in known_people:
@@ -184,6 +191,7 @@ class Recognizer(object):
         return faces, labels
                             
     def predict(self, face):
-        
-        # returns label, accuracy
-        return self.recognizer.predict(face)
+        label, accuracy = self.recognizer.predict(face)
+        name = self.subjects[label]
+        # returns name and accuracy of prediction
+        return name, accuracy
