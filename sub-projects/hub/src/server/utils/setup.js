@@ -1,19 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 
-const envValues = [
-  process.env.PROD_MONGODB_URI,
-  process.env.DEV_MONGODB_URI,
-  process.env.INIT_USERNAME,
-  process.env.INIT_PASSWORD,
-  process.env.PORT,
-  process.env.SECRET,
-  process.env.SALT,
-];
+const envValues = {
+  PROD_MONGODB_URI: process.env.PROD_MONGODB_URI,
+  DEV_MONGODB_URI: process.env.DEV_MONGODB_URI,
+  INIT_USERNAME: process.env.INIT_USERNAME,
+  INIT_PASSWORD: process.env.INIT_PASSWORD,
+  PORT: process.env.PORT,
+  SECRET: process.env.SECRET,
+  SALT: process.env.SALT,
+};
 
 let content = '';
-envValues.forEach((element) => {
-  content += `${element}\n`;
+Object.keys(envValues).forEach((value) => {
+  content += `${value}=${envValues[value]}\n`;
 });
 
 const filePath = path.resolve(__dirname, '../../../.env');
