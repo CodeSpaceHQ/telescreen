@@ -1,17 +1,8 @@
 const path = require('path');
 
 const nodePath = path.resolve(__dirname, '../node_modules');
-const appPath = path.resolve(__dirname, '../src/app');
 
 const base = {
-  // Allows for absolute paths from locations indicated in 'root'
-  resolve: {
-    modules: [
-      nodePath,
-      appPath,
-    ],
-  },
-
   module: {
     /*
       Loaders for specific file endings. Each one can be composed

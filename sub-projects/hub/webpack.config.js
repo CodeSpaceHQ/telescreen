@@ -1,17 +1,27 @@
-const prod = require('./webpack/prod.js');
-const dev = require('./webpack/dev.js');
+const appProd = require('./webpack/app-prod.js');
+const appDev = require('./webpack/app-dev.js');
+const clientProd = require('./webpack/client-prod.js');
+const clientDev = require('./webpack/client-dev.js');
 
+/* eslint-disable no-console */
 function config(env) {
   switch (env) {
-    case 'prod':
+    case 'app-prod':
       process.env.NODE_ENV = 'production';
-      return prod;
-    case 'dev':
+      return appProd;
+    case 'app-dev':
       process.env.NODE_ENV = 'development';
-      return dev;
-    default:
+      return appDev;
+    case 'client-prod':
       process.env.NODE_ENV = 'production';
-      return prod;
+      return clientProd;
+    case 'client-dev':
+      process.env.NODE_ENV = 'development';
+      return clientDev;
+    default:
+      console.log('Invalid config: defaulting to appProd');
+      process.env.NODE_ENV = 'production';
+      return appProd;
   }
 }
 

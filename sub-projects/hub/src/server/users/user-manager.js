@@ -2,6 +2,7 @@ const userModels = require('users/user-models');
 
 const errors = require('resources/errors.js');
 const mailer = require('utils/mailer.js');
+const dbUtils = require('utils/db.js');
 
 const Admin = userModels.Admin;
 
@@ -12,7 +13,7 @@ async function createAdmin(data) {
       throw new errors.MissingParametersError();
     }
 
-    const newPass = await Admin.genPassword();
+    const newPass = await dbUtils.genRandom(20);
 
     const info = {
       email: data.email,

@@ -1,13 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
 
-const strings = require('./resources/strings.js');
-const passport = require('./passport-config.js');
 const apiRouter = require('./router.js');
 
 // Declarations/Definitions
@@ -18,15 +13,8 @@ const corsOptions = {};
 
 // NODE_ENV dependent variations
 switch (process.env.NODE_ENV) {
-  case 'production':
-    corsOptions.origin = 'http://127.0.0.1:3000';
-    break;
-  case 'development':
-    corsOptions.origin = 'http://127.0.0.1:8080';
-    corsOptions.credentials = true;
-    break;
   default:
-    corsOptions.origin = 'http://127.0.0.1:3000';
+    corsOptions.origin = '*';
 }
 
 // Express configuration.
@@ -37,29 +25,10 @@ app.use(morgan(format, {
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// TODO(NilsG-S): setup https for production
-app.use(session({
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 14,
-    secure: process.env.NODE_ENV === 'production',
-  },
-  name: strings.cookieName,
-  resave: false,
-  saveUninitialized: false,
-  secret: process.env.SECRET,
-  store: new MongoStore({
-    mongooseConnection: mongoose.connection,
-    ttl: 60 * 60 * 24 * 14,
-    collection: 'sessions',
-    stringify: false,
-  }),
-}));
-app.use(passport.initialize());
-app.use(passport.session());
+// TODO(NilsG-S): set up https for production
 
 // Routes.
-app.use('/', express.static(`${__dirname}/../../public`));
+app.use('/', express.static(`${__dirname}/../../public/app`));
 app.use('/api', apiRouter);
 
 // 404.

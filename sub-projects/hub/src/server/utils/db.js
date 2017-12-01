@@ -1,34 +1,17 @@
-const Admin = require('users/user-models').Admin;
+const crypto = require('crypto');
 
-async function initialize() {
-  try {
-    const result = await Admin.findOne({}).exec();
+async function genRandom(len) {
+  return new Promise((resolve, reject) => {
+    crypto.randomBytes(Math.ceil(len / 2), (err, buf) => {
+      if (err) {
+        return reject(err);
+      }
 
-    if (result) {
-      return;
-    }
-
-    const info = {
-      email: process.env.INIT_USERNAME,
-      password: process.env.INIT_PASSWORD,
-    };
-
-    const user = new Admin(info);
-
-    await new Promise((resolve, reject) => {
-      user.save((err, response) => {
-        if (err) {
-          reject(err);
-        }
-
-        resolve(response);
-      });
+      return resolve(buf.toString('hex'));
     });
-  } catch (err) {
-    throw err;
-  }
+  });
 }
 
 module.exports = {
-  initialize,
+  genRandom,
 };

@@ -1,6 +1,7 @@
 import React from 'react';
-import axios from 'axios';
-import logger from 'utils/logger';
+
+import * as server from 'server';
+import logger from 'utils/logger.js';
 
 import {
   Button,
@@ -11,8 +12,7 @@ import {
   Segment,
 } from 'semantic-ui-react';
 
-import '../app.css';
-
+import HomeButton from '../home/home-button.jsx';
 
 class AddAdmin extends React.Component {
   constructor(props) {
@@ -32,7 +32,7 @@ class AddAdmin extends React.Component {
   }
 
   handleSubmit() {
-    axios.post('http://127.0.0.1:3000/api/users', {
+    server.createUser({
       email: this.state.email,
     })
       .then(() => {
@@ -45,46 +45,49 @@ class AddAdmin extends React.Component {
 
   render() {
     return (
-      <div className='centered'>
-        <Grid
-          className='center aligned grid'
-          textAlign='center'
-        >
-          <Grid.Column>
-            <Header
-              as='h2'
-              color='blue'
-              textAlign='center'
-            >
-                Add Admin
-            </Header>
-            <Segment>
-              <Form>
-                <Form.Field>
-                  <Input
-                    icon='user'
-                    iconPosition='left'
-                    required
-                    name='email'
-                    type='email'
-                    placeholder='E-mail Address'
-                    onChange={this.handleChange}
-                    value={this.state.email}
+      <div>
+        <HomeButton />
+        <div className='centered'>
+          <Grid
+            className='center aligned grid'
+            textAlign='center'
+          >
+            <Grid.Column>
+              <Header
+                as='h2'
+                color='blue'
+                textAlign='center'
+              >
+                  Add Admin
+              </Header>
+              <Segment>
+                <Form>
+                  <Form.Field>
+                    <Input
+                      icon='user'
+                      iconPosition='left'
+                      required
+                      name='email'
+                      type='email'
+                      placeholder='E-mail Address'
+                      onChange={this.handleChange}
+                      value={this.state.email}
+                    />
+                  </Form.Field>
+                  <Button
+                    type='submit'
+                    icon='checkmark'
+                    content='Submit'
+                    fluid
+                    primary
+                    size='large'
+                    onClick={this.handleSubmit}
                   />
-                </Form.Field>
-                <Button
-                  type='submit'
-                  icon='checkmark'
-                  content='Submit'
-                  fluid
-                  primary
-                  size='large'
-                  onClick={this.handleSubmit}
-                />
-              </Form>
-            </Segment>
-          </Grid.Column>
-        </Grid>
+                </Form>
+              </Segment>
+            </Grid.Column>
+          </Grid>
+        </div>
       </div>
     );
   }

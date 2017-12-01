@@ -16,10 +16,16 @@ const ExistingAccountError = errorFactory('Account with that email address alrea
 
 const MissingParametersError = errorFactory('Required parameters not found.', 400);
 
+const MaxRetriesError = errorFactory('Max number of retries exceeded for operation.', 500);
+
+const ClientNotFoundError = errorFactory('Client not found.', 400);
+
 module.exports = {
   errorFactory,
   InvalidLoginInfoError,
   InvalidSessionError,
   ExistingAccountError,
   MissingParametersError,
+  MaxRetriesError,
+  ClientNotFoundError,
 };
