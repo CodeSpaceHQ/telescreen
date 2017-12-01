@@ -1,6 +1,6 @@
 const request = require('supertest');
 
-const initialize = require('utils/db.js').initialize;
+const initialize = require('utils/uses-db.js').initialize;
 
 /**
  * Uses the server to create and login an admin.
