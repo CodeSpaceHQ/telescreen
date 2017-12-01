@@ -1,9 +1,10 @@
 const sightingModels = require('sighting/sighting-models');
+const latestSightingModels = require('sighting/latest-sighting-models');
 
 const errors = require('resources/errors.js');
 
 const Sighting = sightingModels.Sighting;
-const LatestSighting = sightingModels.LatestSighting;
+const LatestSighting = latestSightingModels.LatestSighting;
 
 async function createSighting(data) {
   try {
@@ -19,22 +20,17 @@ async function createSighting(data) {
     
     const sighting = new Sighting(info);
     const created = await sighting.save();
-    const existing = await LatestSighting
-    .findOneAndUpdate({
-        POIId: data.POIId,
-      },
-      {
-        $set: info,
-      },
-      {
+
+    const existing = await LatestSighting.findOne({ POIId: data.POIId }).exec();
+    if(existing){
+      await LatestSighting.findOneAndUpdate({POIId: data.POIId},{$set: info},{
         new: true,
-    });
-
-    if (!existing) {
+      })
+    }else{
       const latestSighting = new LatestSighting(info);
-
       await latestSighting.save();
-    }
+    };
+
     return created.id;
   } catch (err) {
     throw err;

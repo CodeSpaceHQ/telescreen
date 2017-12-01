@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 * @typedef {Object} sightingSchema
 * @param {string} cameraId
 * @param {string} POIId
-* @param {Date} timeStamp
+* @param {Date} time
 */
 const sightingSchema = new Schema({
   cameraId: {
@@ -20,33 +20,10 @@ const sightingSchema = new Schema({
   },
   time: {
     type: Date,
+    default: Date.now,
   },
 });
-
-const latestSightingSchema = new Schema({
-  cameraId: {
-    type: String,
-    required: true,
-  },
-  POIId: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  time: {
-    type: Date,
-    default: null,
-  },
-});
-
-// sightingSchema.pre('save', function pre(next) {
-//     const sighting = this;
-//     next();
-//     return;
-// });
-
-const LatestSighting = mongoose.model('LatestSighting', latestSightingSchema);
 
 const Sighting = mongoose.model('Sighting', sightingSchema);
 
-module.exports = { Sighting, LatestSighting };
+module.exports = { Sighting };
