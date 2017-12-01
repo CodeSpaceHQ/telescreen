@@ -10,15 +10,16 @@ import {
   Header,
   Grid,
   Segment,
+  Divider,
 } from 'semantic-ui-react';
 
 import HomeButton from '../home/home-button.jsx';
 
-class AddAdmin extends React.Component {
+class AddPOI extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
+      name: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -32,11 +33,11 @@ class AddAdmin extends React.Component {
   }
 
   handleSubmit() {
-    server.createUser({
-      email: this.state.email,
+    server.createPerson({
+      name: this.state.name,
     })
       .then(() => {
-        this.setState({ email: '' });
+        this.setState({ name: '' });
       })
       .catch((error) => {
         logger.error(error);
@@ -58,7 +59,7 @@ class AddAdmin extends React.Component {
                 color='blue'
                 textAlign='center'
               >
-                  Add Admin
+                  Add POI
               </Header>
               <Segment>
                 <Form>
@@ -66,14 +67,14 @@ class AddAdmin extends React.Component {
                     <Input
                       icon='user'
                       iconPosition='left'
-                      required
-                      name='email'
-                      type='email'
-                      placeholder='E-mail Address'
+                      name='name'
+                      placeholder='Name'
                       onChange={this.handleChange}
-                      value={this.state.email}
+                      value={this.state.name}
                     />
                   </Form.Field>
+                  <input type='file' />
+                  <Divider />
                   <Button
                     type='submit'
                     icon='checkmark'
@@ -93,4 +94,4 @@ class AddAdmin extends React.Component {
   }
 }
 
-export default AddAdmin;
+export default AddPOI;
