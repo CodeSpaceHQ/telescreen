@@ -1,13 +1,13 @@
 const express = require('express');
-const personManger = require('poi/poi-manager.js');
+const personManager = require('poi/poi-manager.js');
 
 const poiRouter = express.Router();
 
-poiRouter.post('/', (req,res) => {
+poiRouter.post('/', (req, res) => {
   personManager.createPerson(req.body)
-    .then() => {
+    .then(() => {
       res.status(201).end();
-    }
+    });
 });
 
-module.exports = { poi : poiRouter }
+module.exports = { router: poiRouter };
