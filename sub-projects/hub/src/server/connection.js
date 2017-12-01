@@ -2,10 +2,22 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 let mongoURL;
-if (process.env.NODE_ENV === 'production') {
-  mongoURL = process.env.PROD_MONGODB_URI;
-} else {
-  mongoURL = process.env.DEV_MONGODB_URI;
+switch (process.env.NODE_ENV) {
+  case 'production': {
+    mongoURL = process.env.PROD_MONGODB_URI;
+    break;
+  }
+  case 'development': {
+    mongoURL = process.env.DEV_MONGODB_URI;
+    break;
+  }
+  case 'testing': {
+    mongoURL = process.env.TEST_MONGODB_URI;
+    break;
+  }
+  default: {
+    mongoURL = process.env.DEV_MONGODB_URI;
+  }
 }
 
 /**
