@@ -7,7 +7,7 @@ require('dotenv').load({ path: path.resolve(__dirname, '../../.env') });
 const logger = require('./utils/logger.js');
 const connection = require('./connection.js');
 const app = require('./app.js');
-const initialize = require('./utils/db.js').initialize;
+const initialize = require('./utils/uses-db.js').initialize;
 
 // Declarations/Definitions
 const port = process.env.PORT || 3000;
